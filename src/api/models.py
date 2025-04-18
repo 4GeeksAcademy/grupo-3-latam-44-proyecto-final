@@ -99,3 +99,29 @@ class Favorites(db.Model):
             "id_trabajo": self.id_trabajor,
             "id_trabajador": self.id_trabajador,
         }
+
+
+
+class Empresa(db.Model):
+    __tablename__ = "empresas"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    nombre: Mapped[str] = mapped_column(String(120), nullable=False)
+    descripcion: Mapped[str] = mapped_column(String(250), nullable=False)
+    ubicacion: Mapped[str] = mapped_column(String(120), nullable=False)
+    sitio_web: Mapped[str] = mapped_column(String(220), nullable=True)
+    correo: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    telefono: Mapped[str] = mapped_column(String(120), nullable=False)
+
+    #trabajos = relationship("Trabajo", backref="empresa", lazy=True)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "descripcion": self.descripcion,
+            "ubicacion": self.ubicacion,
+            "sitio_web": self.sitio_web,
+            "correo": self.correo,
+            "telefono": self.telefono
+        }
