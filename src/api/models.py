@@ -1,22 +1,24 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, Boolean, DateTime, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime, timezone
 
 db = SQLAlchemy()
 
-
 class User(db.Model):
+    __tablename__ = "usuarios"
+
     id: Mapped[int] = mapped_column(primary_key=True)
-    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False, index=True)
     password: Mapped[str] = mapped_column(nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True ,nullable=False)
+
     nombre: Mapped[str] = mapped_column(String(120), nullable=False)
     apellido: Mapped[str] = mapped_column(String(120), nullable=False)
     numero: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     acerca: Mapped[str] = mapped_column(String(220), nullable=False)
     portafolio: Mapped[str] = mapped_column(String(220), nullable=False)
-    acerca: Mapped[str] = mapped_column(String(220), nullable=False)
+
     experiencia: Mapped[str] = mapped_column(String(220), nullable=False)
     cursos: Mapped[str] = mapped_column(String(220), nullable=False)
     capacitaciones: Mapped[str] = mapped_column(String(220), nullable=False)
@@ -24,8 +26,13 @@ class User(db.Model):
     idiomas: Mapped[str] = mapped_column(String(220), nullable=False)
     tecnologia: Mapped[str] = mapped_column(String(220), nullable=False)
     lugar: Mapped[str] = mapped_column(String(220), nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
-      
+    
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc), nullable=False)
+
+    # Relaciones
+    postulaciones = relationship("Postulaciones", back_populates="trabajador")
+    favoritos = relationship("Favorites", back_populates="trabajador")
+
     def serialize(self):
         return {
             "nombre": self.nombre,
@@ -39,14 +46,40 @@ class User(db.Model):
             "idiomas": self.idiomas,
             "tecnologia": self.tecnologia,
             "lugar": self.lugar,
-            "cursos": self.cursos,
+            "portafolio": self.portafolio
         }
-      
+
+class Empresa(db.Model):
+    __tablename__ = "empresas"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    nombre: Mapped[str] = mapped_column(String(120), nullable=False)
+    descripcion: Mapped[str] = mapped_column(String(250), nullable=False)
+    ubicacion: Mapped[str] = mapped_column(String(120), nullable=False)
+    sitio_web: Mapped[str] = mapped_column(String(220), nullable=True)
+    correo: Mapped[str] = mapped_column(String(120), unique=True, nullable=False, index=True)
+    telefono: Mapped[str] = mapped_column(String(120), nullable=False)
+
+    trabajos = relationship("Trabajo", back_populates="empresa")
+    postulaciones = relationship("Postulaciones", back_populates="empresa")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "descripcion": self.descripcion,
+            "ubicacion": self.ubicacion,
+            "sitio_web": self.sitio_web,
+            "correo": self.correo,
+            "telefono": self.telefono
+        }
 
 class Trabajo(db.Model):
     __tablename__ = "trabajos"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    empresa_id: Mapped[int] = mapped_column(ForeignKey("empresas.id"), nullable=False)
+
     modalidad: Mapped[str] = mapped_column(String(120), nullable=False)
     nombre_puesto: Mapped[str] = mapped_column(String(120), nullable=False)
     remuneracion: Mapped[int] = mapped_column(nullable=True)
@@ -56,6 +89,10 @@ class Trabajo(db.Model):
     activo: Mapped[bool] = mapped_column(Boolean(), default=True)
     fecha_inicio: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     fecha_vencimiento: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    empresa = relationship("Empresa", back_populates="trabajos")
+    postulaciones = relationship("Postulaciones", back_populates="trabajo")
+    favoritos = relationship("Favorites", back_populates="trabajo")
 
     def serialize(self):
         return {
@@ -70,12 +107,19 @@ class Trabajo(db.Model):
             "fecha_inicio": self.fecha_inicio.isoformat() if self.fecha_inicio else None,
             "fecha_vencimiento": self.fecha_vencimiento.isoformat() if self.fecha_vencimiento else None
         }
-    
+
 class Postulaciones(db.Model):
+    __tablename__ = "postulaciones"
+
     id: Mapped[int] = mapped_column(primary_key=True)
-    id_trabajo: Mapped[int] = mapped_column(nullable=False)
-    id_empresa: Mapped[int] = mapped_column(nullable=False)
-    id_trabajador: Mapped[int] = mapped_column(nullable=False)
+    id_trabajo: Mapped[int] = mapped_column(ForeignKey("trabajos.id"), nullable=False)
+    id_empresa: Mapped[int] = mapped_column(ForeignKey("empresas.id"), nullable=False)
+    id_trabajador: Mapped[int] = mapped_column(ForeignKey("usuarios.id"), nullable=False)
+
+    trabajo = relationship("Trabajo", back_populates="postulaciones")
+    empresa = relationship("Empresa", back_populates="postulaciones")
+    trabajador = relationship("User", back_populates="postulaciones")
+
     def serialize(self):
         return {
             "id_trabajo": self.id_trabajo,
@@ -83,45 +127,25 @@ class Postulaciones(db.Model):
             "id_trabajador": self.id_trabajador,
         }
 
-
-class BlackListToken(db.Model):
-        id: Mapped[int] = mapped_column(primary_key=True)
-        jti: Mapped[str]= mapped_column(String(40), nullable=False, index=True)
-        created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
-      
-      
 class Favorites(db.Model):
+    __tablename__ = "favoritos"
+
     id: Mapped[int] = mapped_column(primary_key=True)
-    id_trabajo: Mapped[int] = mapped_column(nullable=False)
-      
+    id_trabajo: Mapped[int] = mapped_column(ForeignKey("trabajos.id"), nullable=False)
+    id_trabajador: Mapped[int] = mapped_column(ForeignKey("usuarios.id"), nullable=False)
+
+    trabajo = relationship("Trabajo", back_populates="favoritos")
+    trabajador = relationship("User", back_populates="favoritos")
+
     def serialize(self):
         return {
-            "id_trabajo": self.id_trabajor,
+            "id_trabajo": self.id_trabajo,
             "id_trabajador": self.id_trabajador,
         }
 
-
-
-class Empresa(db.Model):
-    __tablename__ = "empresas"
+class BlackListToken(db.Model):
+    __tablename__ = "blacklist_tokens"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    nombre: Mapped[str] = mapped_column(String(120), nullable=False)
-    descripcion: Mapped[str] = mapped_column(String(250), nullable=False)
-    ubicacion: Mapped[str] = mapped_column(String(120), nullable=False)
-    sitio_web: Mapped[str] = mapped_column(String(220), nullable=True)
-    correo: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
-    telefono: Mapped[str] = mapped_column(String(120), nullable=False)
-
-    #trabajos = relationship("Trabajo", backref="empresa", lazy=True)
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "nombre": self.nombre,
-            "descripcion": self.descripcion,
-            "ubicacion": self.ubicacion,
-            "sitio_web": self.sitio_web,
-            "correo": self.correo,
-            "telefono": self.telefono
-        }
+    jti: Mapped[str] = mapped_column(String(40), nullable=False, index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc), nullable=False)
