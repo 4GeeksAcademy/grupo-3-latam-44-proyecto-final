@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
-from api.models import db, User, BlackListToken
+from api.models import db, User, BlackListToken, Empresa
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -115,6 +115,28 @@ def create_user():
 
 
 
+
+#Creacion de user empresa
+
+@app.route("/empresa", methods=["POST"])
+def create_user_empresa():
+
+    data = request.get_json(silent=True)
+    if not data or not data.get("email") or not data.get("password"):
+        return jsonify({"error": "Datos inválidos"}), 400
+
+    if db.session.execute(db.select(Empresa).filter_by(email=data["email"])).scalar_one_or_none():
+        return jsonify({"error": "Empresa ya existe"}), 409
+    pw_hash = bcrypt.generate_password_hash(data["password"]).decode('utf8')
+    date = datetime.now(timezone.utc)
+    empresa = Empresa(nombre_rp=data["nombre_rp"],apellido_rp=data["apellido_rp"],numero=data["numero"],nombre=data["nombre"],email=data["email"],password=pw_hash,
+        created_at=date)
+    db.session.add(empresa)
+    db.session.commit()
+    return jsonify({"message": "Empresa registrada"}), 201
+
+
+
 #login usario trabajador
 @app.route('/login', methods=['POST'])
 def handle_login():
@@ -128,6 +150,29 @@ def handle_login():
             return jsonify({"msg": "Credenciales incorrectas"}), 401
 
         access_token = create_access_token(identity=str(user.id))
+        
+        return jsonify({"ok":True, "msg": "Login exitoso", "access_token":access_token}),200
+    
+    except Exception as e:
+        print("Error: ", str(e))
+        db.session.rollback()
+        return jsonify({"ok": False, "msg":str(e)}),500
+
+
+
+#login usario empresa
+
+@app.route('/login', methods=['POST'])
+def handle_login_empresa():
+    try:
+        data = request.get_json(silent=True)
+        empresa = db.session.execute(db.select(Empresa).filter_by(email=data["email"])).scalar_one_or_none()
+        check = bcrypt.check_password_hash(empresa.password, data["password"])
+        print (check)
+        if not empresa or check != True:
+            return jsonify({"msg": "Credenciales incorrectas"}), 401
+
+        access_token = create_access_token(identity=str(empresa.id))
         
         return jsonify({"ok":True, "msg": "Login exitoso", "access_token":access_token}),200
     
