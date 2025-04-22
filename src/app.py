@@ -17,6 +17,9 @@ from datetime import datetime, timezone
 from flask import Flask
 from flask_bcrypt import Bcrypt
 
+
+
+
 # from models import Person
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
@@ -138,8 +141,8 @@ def create_user_empresa():
 
 
 #login usario trabajador
-@app.route('/login', methods=['POST'])
-def handle_login():
+@app.route('/login/user', methods=['POST'])
+def handle_login_trabajador():
     try:
 
         data = request.get_json(silent=True)
@@ -162,7 +165,7 @@ def handle_login():
 
 #login usario empresa
 
-@app.route('/login', methods=['POST'])
+@app.route('/login/empresa', methods=['POST'])
 def handle_login_empresa():
     try:
         data = request.get_json(silent=True)
