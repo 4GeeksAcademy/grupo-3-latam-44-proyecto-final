@@ -12,13 +12,13 @@ class User(db.Model):
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False, index=True)
     password: Mapped[str] = mapped_column(nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True ,nullable=False)
-
+    #datos basicos
     nombre: Mapped[str] = mapped_column(String(120), nullable=False)
     apellido: Mapped[str] = mapped_column(String(120), nullable=False)
     numero: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     acerca: Mapped[str] = mapped_column(String(220), nullable=False)
     portafolio: Mapped[str] = mapped_column(String(220), nullable=False)
-
+    #CV
     experiencia: Mapped[str] = mapped_column(String(220), nullable=False)
     cursos: Mapped[str] = mapped_column(String(220), nullable=False)
     capacitaciones: Mapped[str] = mapped_column(String(220), nullable=False)
@@ -26,7 +26,7 @@ class User(db.Model):
     idiomas: Mapped[str] = mapped_column(String(220), nullable=False)
     tecnologia: Mapped[str] = mapped_column(String(220), nullable=False)
     lugar: Mapped[str] = mapped_column(String(220), nullable=False)
-    
+
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc), nullable=False)
 
     # Relaciones
@@ -53,6 +53,15 @@ class Empresa(db.Model):
     __tablename__ = "empresas"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+   
+    password: Mapped[str] = mapped_column(nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True ,nullable=False)
+    #Datos representante
+    nombre_rp: Mapped[str] = mapped_column(String(120), nullable=False)
+    apellido_rp: Mapped[str] = mapped_column(String(120), nullable=False)
+    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False, index=True)
+
+
     nombre: Mapped[str] = mapped_column(String(120), nullable=False)
     descripcion: Mapped[str] = mapped_column(String(250), nullable=False)
     ubicacion: Mapped[str] = mapped_column(String(120), nullable=False)
