@@ -50,7 +50,7 @@ class User(db.Model):
         }
 
 class Empresa(db.Model):
-    __tablename__ = "empresas"
+    __tablename__ = "empresa"
 
     id: Mapped[int] = mapped_column(primary_key=True)
    
@@ -68,6 +68,8 @@ class Empresa(db.Model):
     sitio_web: Mapped[str] = mapped_column(String(220), nullable=True)
     correo: Mapped[str] = mapped_column(String(120), unique=True, nullable=False, index=True)
     telefono: Mapped[str] = mapped_column(String(120), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc), nullable=False)
 
     trabajos = relationship("Trabajo", back_populates="empresa")
     postulaciones = relationship("Postulaciones", back_populates="empresa")
@@ -87,7 +89,7 @@ class Trabajo(db.Model):
     __tablename__ = "trabajos"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    empresa_id: Mapped[int] = mapped_column(ForeignKey("empresas.id"), nullable=False)
+    empresa_id: Mapped[int] = mapped_column(ForeignKey("empresa.id"), nullable=False)
 
     modalidad: Mapped[str] = mapped_column(String(120), nullable=False)
     nombre_puesto: Mapped[str] = mapped_column(String(120), nullable=False)
@@ -122,7 +124,7 @@ class Postulaciones(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     id_trabajo: Mapped[int] = mapped_column(ForeignKey("trabajos.id"), nullable=False)
-    id_empresa: Mapped[int] = mapped_column(ForeignKey("empresas.id"), nullable=False)
+    id_empresa: Mapped[int] = mapped_column(ForeignKey("empresa.id"), nullable=False)
     id_trabajador: Mapped[int] = mapped_column(ForeignKey("usuarios.id"), nullable=False)
 
     trabajo = relationship("Trabajo", back_populates="postulaciones")
