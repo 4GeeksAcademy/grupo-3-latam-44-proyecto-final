@@ -53,6 +53,15 @@ class Empresa(db.Model):
     __tablename__ = "empresas"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+   
+    password: Mapped[str] = mapped_column(nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True ,nullable=False)
+    #Datos representante
+    nombre_rp: Mapped[str] = mapped_column(String(120), nullable=False)
+    apellido_rp: Mapped[str] = mapped_column(String(120), nullable=False)
+    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False, index=True)
+
+
     nombre: Mapped[str] = mapped_column(String(120), nullable=False)
     descripcion: Mapped[str] = mapped_column(String(250), nullable=False)
     ubicacion: Mapped[str] = mapped_column(String(120), nullable=False)
