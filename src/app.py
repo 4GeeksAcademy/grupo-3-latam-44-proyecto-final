@@ -129,7 +129,7 @@ def create_user_empresa():
         return jsonify({"error": "Empresa ya existe"}), 409
     pw_hash = bcrypt.generate_password_hash(data["password"]).decode('utf8')
     date = datetime.now(timezone.utc)
-    empresa = Empresa(nombre_rp=data["nombre_rp"],apellido_rp=data["apellido_rp"],numero=data["numero"],nombre=data["nombre"],email=data["email"],password=pw_hash,
+    empresa = Empresa(nombre_rp=data["nombre_rp"],apellido_rp=data["apellido_rp"],telefono=data["telefono"],nombre=data["nombre"],email=data["email"],password=pw_hash,
         created_at=date)
     db.session.add(empresa)
     db.session.commit()
