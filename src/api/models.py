@@ -2,7 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from sqlalchemy import String, Boolean, DateTime, Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 db = SQLAlchemy()

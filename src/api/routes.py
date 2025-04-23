@@ -1,6 +1,6 @@
 # ✅ routes.py - Código completo y corregido con endpoint de postulados
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Trabajo, Postulacion
+from api.models import db, User, Trabajo, Postulaciones
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
@@ -20,7 +20,7 @@ def handle_hello():
 @api.route('/api/vacantes/<int:vacante_id>/postulados', methods=['GET'])
 def get_postulados_por_vacante(vacante_id):
     try:
-        postulaciones = Postulacion.query.filter_by(id_trabajo=vacante_id).all()
+        postulaciones = Postulaciones.query.filter_by(id_trabajo=vacante_id).all()
 
         if not postulaciones:
             return jsonify({"msg": "No hay trabajadores postulados a esta vacante"}), 404
