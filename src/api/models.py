@@ -85,7 +85,7 @@ class Empresa(db.Model):
             "id": self.id,
 
             "email": self.email,
-            "contactos_disponibles": self.contactos_disponibles
+            "contactos_disponibles": self.contactos_disponibles,
 
             "nombre": self.nombre,
             "descripcion": self.descripcion,
