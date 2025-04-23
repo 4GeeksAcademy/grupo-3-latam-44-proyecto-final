@@ -1,11 +1,14 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean, DateTime, ForeignKey
+
+from sqlalchemy import String, Boolean, DateTime, Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from datetime import datetime, timezone
+from datetime import datetime
+
 
 db = SQLAlchemy()
 
 class User(db.Model):
+
     __tablename__ = "usuarios"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -52,9 +55,11 @@ class User(db.Model):
 class Empresa(db.Model):
     __tablename__ = "empresa"
 
+
     id: Mapped[int] = mapped_column(primary_key=True)
    
     password: Mapped[str] = mapped_column(nullable=False)
+
     is_active: Mapped[bool] = mapped_column(Boolean, default=True ,nullable=False)
     #Datos representante
     nombre_rp: Mapped[str] = mapped_column(String(120), nullable=False)
@@ -74,15 +79,21 @@ class Empresa(db.Model):
     trabajos = relationship("Trabajo", back_populates="empresa")
     postulaciones = relationship("Postulaciones", back_populates="empresa")
 
+
     def serialize(self):
         return {
             "id": self.id,
+
+            "email": self.email,
+            "contactos_disponibles": self.contactos_disponibles
+
             "nombre": self.nombre,
             "descripcion": self.descripcion,
             "ubicacion": self.ubicacion,
             "sitio_web": self.sitio_web,
             "correo": self.correo,
             "telefono": self.telefono
+
         }
 
 class Trabajo(db.Model):
@@ -101,9 +112,11 @@ class Trabajo(db.Model):
     fecha_inicio: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     fecha_vencimiento: Mapped[datetime] = mapped_column(DateTime, nullable=True)
 
+
     empresa = relationship("Empresa", back_populates="trabajos")
     postulaciones = relationship("Postulaciones", back_populates="trabajo")
     favoritos = relationship("Favorites", back_populates="trabajo")
+
 
     def serialize(self):
         return {
@@ -119,6 +132,7 @@ class Trabajo(db.Model):
             "fecha_vencimiento": self.fecha_vencimiento.isoformat() if self.fecha_vencimiento else None
         }
 
+
 class Postulaciones(db.Model):
     __tablename__ = "postulaciones"
 
@@ -129,14 +143,20 @@ class Postulaciones(db.Model):
 
     trabajo = relationship("Trabajo", back_populates="postulaciones")
     empresa = relationship("Empresa", back_populates="postulaciones")
+
     trabajador = relationship("User", back_populates="postulaciones")
 
     def serialize(self):
         return {
+
+            "id": self.id,
             "id_trabajo": self.id_trabajo,
-            "id_empresa": self.id_empresa,
-            "id_trabajador": self.id_trabajador,
+           "id_empresa": self.id_empresa,
+            "id_trabajador": self.id_trabajador
         }
+
+
+        
 
 class Favorites(db.Model):
     __tablename__ = "favoritos"
@@ -160,3 +180,4 @@ class BlackListToken(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     jti: Mapped[str] = mapped_column(String(40), nullable=False, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc), nullable=False)
+
