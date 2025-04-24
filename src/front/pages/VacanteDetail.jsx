@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import TrabajadorPostulado from "../components/TrabajadorPostulado";
 
-const VacanteDetail = () => {
+export const VacanteDetail = () => {
   const { id } = useParams(); // ID de la vacante desde la URL
   const [postulados, setPostulados] = useState([]);
   const [error, setError] = useState(null);
@@ -38,6 +38,4 @@ const VacanteDetail = () => {
     </div>
   );
 };
-
-export default VacanteDetail;
 

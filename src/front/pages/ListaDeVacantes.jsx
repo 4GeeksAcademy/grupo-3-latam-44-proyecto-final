@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import VacanteForm from "../components/VacanteForm";
-import TrabajadorPostulado from "../components/TrabajadorPostulado";
 import { Link } from "react-router-dom";
 
 
-const ListaDeVacantes = () => {
+export const ListaDeVacantes = () => {
   const [vacantes, setVacantes] = useState([]);
   const [vacanteSeleccionada, setVacanteSeleccionada] = useState(null);
   const [conteoPostulados, setConteoPostulados] = useState({}); // 🟡 Nuevo estado
@@ -82,5 +81,3 @@ const ListaDeVacantes = () => {
     </div>
   );
 };
-
-export default ListaDeVacantes;
