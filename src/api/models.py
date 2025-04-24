@@ -49,7 +49,7 @@ class CV(db.Model):
     usuario = relationship("User", back_populates="cv")
 
 class Empresa(db.Model):
-    __tablename__ = "empresas"
+    __tablename__ = "empresa"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     nombre: Mapped[str] = mapped_column(String(120), nullable=True)
@@ -62,11 +62,13 @@ class Empresa(db.Model):
     trabajos = relationship("Trabajo", back_populates="empresa")
     postulaciones = relationship("Postulaciones", back_populates="empresa")
 
+
+
 class Trabajo(db.Model):
     __tablename__ = "trabajos"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    empresa_id: Mapped[int] = mapped_column(ForeignKey("empresas.id"), nullable=True)
+    empresa_id: Mapped[int] = mapped_column(ForeignKey("empresa.id"), nullable=True)
     modalidad: Mapped[str] = mapped_column(String(120), nullable=True)
     nombre_puesto: Mapped[str] = mapped_column(String(120), nullable=True)
     remuneracion: Mapped[int] = mapped_column(nullable=True)
@@ -86,7 +88,7 @@ class Postulaciones(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     id_trabajo: Mapped[int] = mapped_column(ForeignKey("trabajos.id"), nullable=True)
-    id_empresa: Mapped[int] = mapped_column(ForeignKey("empresas.id"), nullable=True)
+    id_empresa: Mapped[int] = mapped_column(ForeignKey("empresa.id"), nullable=True)
     id_trabajador: Mapped[int] = mapped_column(ForeignKey("usuarios.id"), nullable=True)
 
     trabajo = relationship("Trabajo", back_populates="postulaciones")
