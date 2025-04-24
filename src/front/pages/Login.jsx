@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom";
 import md5 from 'md5';
+import { NavbarLogin } from "../components/NavbarLogin";
 
 export const Login = () => {
 
@@ -42,6 +43,7 @@ export const Login = () => {
 
     return (
         <div>
+            <NavbarLogin />
             <div className='container-sm'>
             <form>
                 <div className="mb-3">
