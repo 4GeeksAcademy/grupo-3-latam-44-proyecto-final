@@ -13,6 +13,7 @@ import { Login } from "./pages/Login";
 import { PerfilTrabajador } from "./pages/PerfilTrabajador"; // 👈 Ya integrado
 import { VacanteDetail } from "./pages/VacanteDetail"; // 👈 Ya integrado
 import { ListaDeVacantes } from "./pages/ListaDeVacantes";
+import { RegistroUser } from "./pages/RegistroUser";
 
 
 
@@ -26,6 +27,7 @@ export const router = createBrowserRouter(
       <Route path="/vacante/:id" element={<VacanteDetail />} />
       <Route path="/vacantes" element={<ListaDeVacantes />} />
       <Route path="/login" element={<Login/>}/>
+      <Route path="/registro-user" element={<RegistroUser/>}/>
     
     </Route>
   )
