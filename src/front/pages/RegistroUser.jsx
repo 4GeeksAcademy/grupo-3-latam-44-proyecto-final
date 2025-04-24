@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import md5 from 'md5';
+import { NavbarRegistro } from '../components/NavbarRegistro';
 
 export const RegistroUser = () => {
 
@@ -132,6 +133,7 @@ export const RegistroUser = () => {
 
 	return (
 		<div>
+			<NavbarRegistro/>
 			<div className="form-check form-switch">
 				<input className="form-check-input" type="checkbox" role="switch" id="switchCheckChecked" onClick={toggleEmpresa}/>
 				<label className="form-check-label" for="switchCheckChecked">Soy Empresa</label>
