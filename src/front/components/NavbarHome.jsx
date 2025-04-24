@@ -10,7 +10,7 @@ export const NavbarHome = () => {
                     JobFinder
                 </a>
                 <div className="d-flex">
-                    <Link to="/login-empresa"><button className="btn btn-outline-success me-2" type="button">Login Empresa</button></Link>
+                    <Link to="/registro"><button className="btn btn-outline-success me-2" type="button">Registrarme</button></Link>
                     <Link to="/login"><button className="btn btn-success me-2" type="button">Login</button></Link>
                 </div>
             </div>
