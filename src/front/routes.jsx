@@ -9,9 +9,12 @@ import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
 import { Single } from "./pages/Single";
 import { Demo } from "./pages/Demo";
-import PerfilTrabajador from "./pages/PerfilTrabajador"; // 👈 Ya integrado
-import VacanteDetail from "./pages/VacanteDetail"; // 👈 Ya integrado
-import ListaDeVacantes from "./pages/ListaDeVacantes";
+import { Login } from "./pages/Login";
+import { PerfilTrabajador } from "./pages/PerfilTrabajador"; // 👈 Ya integrado
+import { VacanteDetail } from "./pages/VacanteDetail"; // 👈 Ya integrado
+import { ListaDeVacantes } from "./pages/ListaDeVacantes";
+import { RegistroUser } from "./pages/RegistroUser";
+
 
 
 export const router = createBrowserRouter(
@@ -23,6 +26,8 @@ export const router = createBrowserRouter(
       <Route path="/trabajador/:id" element={<PerfilTrabajador />} />
       <Route path="/vacante/:id" element={<VacanteDetail />} />
       <Route path="/vacantes" element={<ListaDeVacantes />} />
+      <Route path="/login" element={<Login/>}/>
+      <Route path="/registro" element={<RegistroUser/>}/>
     
     </Route>
   )

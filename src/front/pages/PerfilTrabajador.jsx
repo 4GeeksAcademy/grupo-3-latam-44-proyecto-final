@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-const PerfilTrabajador = () => {
+export const PerfilTrabajador = () => {
   const { id } = useParams(); // ID del trabajador
   const [perfil, setPerfil] = useState(null);
   const [error, setError] = useState(null);
@@ -88,4 +88,3 @@ const PerfilTrabajador = () => {
   );
 };
 
-export default PerfilTrabajador;
