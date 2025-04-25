@@ -74,13 +74,13 @@ class Empresa(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            "contactos_disponibles": self.contactos_disponibles
+            "contactos_disponibles": self.contactos_disponibles,
             "nombre": self.nombre,
             "descripcion": self.descripcion,
             "ubicacion": self.ubicacion,
             "sitio_web": self.sitio_web,
             "correo": self.correo,
-            "telefono": self.telefono
+            "telefono": self.telefono,
             "rfc": self.rfc
 
         }
