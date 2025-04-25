@@ -73,6 +73,8 @@ class Empresa(db.Model):
     sitio_web: Mapped[str] = mapped_column(String(220), nullable=True)
     correo: Mapped[str] = mapped_column(String(120), unique=True, nullable=False, index=True)
     telefono: Mapped[str] = mapped_column(String(120), nullable=False)
+    rfc: Mapped[str] = mapped_column(String(13), nullable=False)
+
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc), nullable=False)
 
@@ -83,16 +85,15 @@ class Empresa(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-
             "email": self.email,
             "contactos_disponibles": self.contactos_disponibles
-
             "nombre": self.nombre,
             "descripcion": self.descripcion,
             "ubicacion": self.ubicacion,
             "sitio_web": self.sitio_web,
             "correo": self.correo,
             "telefono": self.telefono
+            "rfc": self.rfc
 
         }
 
