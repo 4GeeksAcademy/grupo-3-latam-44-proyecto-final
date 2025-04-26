@@ -53,13 +53,15 @@ class Empresa(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     nombre: Mapped[str] = mapped_column(String(120), nullable=True)
+    nombrerp: Mapped[str] = mapped_column(String(120), nullable=True)
+    apellidorp: Mapped[str] = mapped_column(String(120), nullable=True)
     descripcion: Mapped[str] = mapped_column(String(250), nullable=True)
     ubicacion: Mapped[str] = mapped_column(String(120), nullable=True)
     sitio_web: Mapped[str] = mapped_column(String(220), nullable=True)
-
-    correo: Mapped[str] = mapped_column(String(120), unique=True, nullable=False, index=True)
-    telefono: Mapped[str] = mapped_column(String(120), nullable=False)
-    rfc: Mapped[str] = mapped_column(String(13), nullable=False)
+    password: Mapped[str] = mapped_column(nullable=True)
+    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False, index=True)
+    telefono: Mapped[str] = mapped_column(String(120), nullable=True)
+    rfc: Mapped[str] = mapped_column(String(13), nullable=True)
 
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc), nullable=False)
