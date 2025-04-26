@@ -95,6 +95,7 @@ class Trabajo(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     empresa_id: Mapped[int] = mapped_column(ForeignKey("empresa.id"), nullable=True)
     modalidad: Mapped[str] = mapped_column(String(120), nullable=True)
+    descripcion: Mapped[str] = mapped_column(String(120), nullable=True)
     nombre_puesto: Mapped[str] = mapped_column(String(120), nullable=True)
     remuneracion: Mapped[int] = mapped_column(nullable=True)
     condiciones: Mapped[str] = mapped_column(String(250), nullable=True)
@@ -107,6 +108,25 @@ class Trabajo(db.Model):
     empresa = relationship("Empresa", back_populates="trabajos")
     postulaciones = relationship("Postulaciones", back_populates="trabajo")
     favoritos = relationship("Favorites", back_populates="trabajo")
+
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "empresa_id": self.empresa_id,
+            "modalidad": self.modalidad,
+            "descripcion":self.descripcion,
+            "nombre_puesto": self.nombre_puesto,
+            "remuneracion": self.remuneracion,
+            "condiciones": self.condiciones,
+            "requerimientos":self.requerimientos,
+            "responsabilidades": self.responsabilidades,
+            "activo": self.activo,
+            "fecha_inicio": self.fecha_inicio,
+            "fecha_vencimiento": self.fecha_vencimiento
+
+        }
+
 
 class Postulaciones(db.Model):
     __tablename__ = "postulaciones"
