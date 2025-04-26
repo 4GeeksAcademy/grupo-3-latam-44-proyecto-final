@@ -1,7 +1,7 @@
 
 from flask import Flask, request, jsonify, url_for, Blueprint
 
-from api.models import db, User, Trabajo, Postulacion, Empresa
+from api.models import db, User, Trabajo, Postulaciones, Empresa
 
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
@@ -131,7 +131,7 @@ def listar_postulantes(empresa_id):
     if empresa_id != current_user_id:
         return jsonify({"msg": "No autorizado"}), 403
 
-    postulaciones = Postulacion.query.filter_by(id_empresa=empresa_id).all()
+    postulaciones = Postulaciones.query.filter_by(id_empresa=empresa_id).all()
     resultado = []
     for p in postulaciones:
         trabajador = User.query.get(p.id_trabajador)
