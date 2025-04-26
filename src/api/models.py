@@ -53,6 +53,7 @@ class Empresa(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     nombre: Mapped[str] = mapped_column(String(120), nullable=True)
+    razon_social: Mapped[str] = mapped_column(String(120), nullable=True)
     nombrerp: Mapped[str] = mapped_column(String(120), nullable=True)
     apellidorp: Mapped[str] = mapped_column(String(120), nullable=True)
     descripcion: Mapped[str] = mapped_column(String(250), nullable=True)

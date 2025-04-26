@@ -26,7 +26,7 @@ export const RegistroUser = () => {
 	const [nombreRp, setNombreRP] = useState("")
 	const [apellidoRp, setApellidoRP] = useState("")
 	const [nombreEmpresa, setNombreEmpresa] = useState("")
-
+	const [razonSocial, setRazonSocial] = useState("")
 	//Variables errores y cambio de perfil
 
 	const [error, setError] = useState("")
@@ -98,7 +98,8 @@ export const RegistroUser = () => {
 			"nombre_rp": nombreRp,
 			"apellido_rp": apellidoRp,
 			"telefono": numero,
-			"nombreEmpresa":nombreEmpresa
+			"nombreEmpresa":nombreEmpresa,
+			"razonSocial":razonSocial
 
 		};
 		if (password === reEnteredpassword && password != "") {
@@ -211,6 +212,14 @@ export const RegistroUser = () => {
 					<input type="text" className="form-control" id="inputTelefono"
 						onChange={(e) => {
 							setNombreEmpresa(e.target.value)
+						}}
+					/>
+				</div>
+				<div className="col-md-6" style={toggle}>
+					<label for="inputCity" className="form-label">Razon Social</label>
+					<input type="text" className="form-control" id="inputTelefono"
+						onChange={(e) => {
+							setRazonSocial(e.target.value)
 						}}
 					/>
 				</div>
