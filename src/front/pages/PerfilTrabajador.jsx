@@ -15,7 +15,7 @@ export const PerfilTrabajador = () => {
     const getPerfil = async () => {
       try {
         const resp = await fetch(
-          `http://localhost:3001/api/trabajador/${id}?empresa_id=${empresa_id}&trabajo_id=${trabajo_id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/trabajador/${id}?empresa_id=${empresa_id}&trabajo_id=${trabajo_id}`,
           {
             method: "GET",
             headers: {
