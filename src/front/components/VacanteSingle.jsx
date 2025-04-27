@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react'
-import { useParams } from "react-router-dom";
 
-export const VacanteSingle = () => {
-    const { id } = useParams();
+
+export const VacanteSingle = (id) => {
+
     const [nombrePuesto, setNombrePuesto] = useState()
     const [modalidad, setModalidad] = useState()
     const [condiciones, setCondiciones] = useState()
@@ -14,7 +14,7 @@ export const VacanteSingle = () => {
 
     const handleVacante = async()=>{
         try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${id}`,{
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${id.id}`,{
                 method:'GET',
                 headers:{
                     "Content-Type":"application/json"

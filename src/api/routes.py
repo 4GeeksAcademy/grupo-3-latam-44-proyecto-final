@@ -84,6 +84,19 @@ def get_vacante_by_id(vacante_id):
 
 
 
+@api.route('/vacantes', methods=['GET'])
+def handle_vacantes():
+    try:
+        vacante_list = []
+        vacante = db.session.execute(db.select(Trabajo)).scalars().all()
+        for p in vacante:
+            vacante_list.append(p.serialize())
+        return jsonify(vacante_list)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
 
 
 @api.route('/empresa/<int:empresa_id>', methods=['PUT'])
