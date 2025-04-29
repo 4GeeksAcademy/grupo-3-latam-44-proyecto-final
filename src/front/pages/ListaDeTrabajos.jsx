@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import TrabajoForm from "../../components/TrabajoForm";
 
 const ListaDeTrabajos = () => {
@@ -7,7 +8,9 @@ const ListaDeTrabajos = () => {
 
   const getTrabajos = async () => {
     try {
-      const res = await fetch("http://localhost:3001/api/trabajos");
+
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajos`);
+
       const data = await res.json();
       setTrabajos(data);
     } catch (error) {
@@ -48,5 +51,5 @@ const ListaDeTrabajos = () => {
     </div>
   );
 };
-
 export default ListaDeTrabajos;
+
