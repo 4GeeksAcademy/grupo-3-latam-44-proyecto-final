@@ -41,6 +41,10 @@ export const NavbarHome = () => {
         <Link to="/registrarme" className="btn btn-success">
           Registrarme
         </Link>
+        <Link to="/admin-pagos" className="btn btn-warning">
+          Pagos
+        </Link>
+
       </div>
     </nav>
   );
