@@ -19,7 +19,7 @@ class User(db.Model):
 
     perfil = relationship("Perfil", back_populates="usuario", uselist=False, cascade="all, delete-orphan")
     cv = relationship("CV", back_populates="usuario", uselist=False, cascade="all, delete-orphan")
-    postulaciones = relationship("Postulaciones", back_populates="trabajador")
+    postulaciones = relationship("Postulacion", back_populates="trabajador")
     favoritos = relationship("Favorites", back_populates="trabajador")
 
     def serialize(self):
@@ -99,7 +99,7 @@ class Empresa(db.Model):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc), nullable=False)
 
     trabajos = relationship("Trabajo", back_populates="empresa")
-    postulaciones = relationship("Postulaciones", back_populates="empresa")
+    postulaciones = relationship("Postulacion", back_populates="empresa")
 
 
 
@@ -137,7 +137,7 @@ class Trabajo(db.Model):
     fecha_vencimiento: Mapped[datetime] = mapped_column(DateTime, nullable=True)
 
     empresa = relationship("Empresa", back_populates="trabajos")
-    postulaciones = relationship("Postulaciones", back_populates="trabajo")
+    postulaciones = relationship("Postulacion", back_populates="trabajo")
     favoritos = relationship("Favorites", back_populates="trabajo")
 
 
@@ -160,16 +160,16 @@ class Trabajo(db.Model):
 
 
 class Postulacion(db.Model):
-    __tablename__ = "postulaciones"
+    __tablename__ = "postulacion"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     id_trabajo: Mapped[int] = mapped_column(ForeignKey("trabajos.id"), nullable=True)
     id_empresa: Mapped[int] = mapped_column(ForeignKey("empresa.id"), nullable=True)
     id_trabajador: Mapped[int] = mapped_column(ForeignKey("usuarios.id"), nullable=True)
 
-    trabajo = relationship("Trabajo", back_populates="postulaciones")
-    empresa = relationship("Empresa", back_populates="postulaciones")
-    trabajador = relationship("User", back_populates="postulaciones")
+    trabajo = relationship("Trabajo", back_populates="postulacion")
+    empresa = relationship("Empresa", back_populates="postulacion")
+    trabajador = relationship("User", back_populates="postulacion")
 
     def serialize(self):
         return {
