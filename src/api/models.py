@@ -167,9 +167,9 @@ class Postulacion(db.Model):
     id_empresa: Mapped[int] = mapped_column(ForeignKey("empresa.id"), nullable=True)
     id_trabajador: Mapped[int] = mapped_column(ForeignKey("usuarios.id"), nullable=True)
 
-    trabajo = relationship("Trabajo", back_populates="postulacion")
-    empresa = relationship("Empresa", back_populates="postulacion")
-    trabajador = relationship("User", back_populates="postulacion")
+    trabajo = relationship("Trabajo", back_populates="postulaciones")
+    empresa = relationship("Empresa", back_populates="postulaciones")
+    trabajador = relationship("User", back_populates="postulaciones")
 
     def serialize(self):
         return {
