@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import TrabajoForm from "../components/TrabajoForm";
 
-export const ListaDeTrabajos = () => {
+import TrabajoForm from "../../components/TrabajoForm";
+
+const ListaDeTrabajos = () => {
   const [trabajos, setTrabajos] = useState([]);
   const [trabajoSeleccionado, setTrabajoSeleccionado] = useState(null);
 
   const getTrabajos = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes`);
+
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajos`);
+
       const data = await res.json();
       setTrabajos(data);
     } catch (error) {
@@ -48,4 +51,5 @@ export const ListaDeTrabajos = () => {
     </div>
   );
 };
+export default ListaDeTrabajos;
 
