@@ -131,4 +131,4 @@ export const Vacantes = () => {
         )}
       </div>
     </>
-  );
+  )}
