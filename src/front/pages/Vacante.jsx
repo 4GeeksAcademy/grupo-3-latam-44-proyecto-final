@@ -7,7 +7,6 @@ export const Vacante = () => {
    const { id } = useParams();
   return (
     <div>
-        <NavbarHome/>
         <VacanteSingle id={id}/>
     </div>
   )
