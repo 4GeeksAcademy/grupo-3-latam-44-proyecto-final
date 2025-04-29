@@ -159,7 +159,7 @@ class Trabajo(db.Model):
         }
 
 
-class Postulaciones(db.Model):
+class Postulacion(db.Model):
     __tablename__ = "postulaciones"
 
     id: Mapped[int] = mapped_column(primary_key=True)
