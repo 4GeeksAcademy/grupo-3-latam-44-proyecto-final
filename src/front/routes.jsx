@@ -7,7 +7,7 @@ import { LandingPage } from "./pages/LandingPage";
 import { Vacantes } from "./pages/Vacantes"; // 👈 Agregamos estas rutas
 import { Login } from "./pages/Login";
 import { Registrarme } from "./pages/Registrarme";
-
+import {Vacante} from "./pages/Vacante"
 export const AppRouter = () => {
   return (
     <BrowserRouter>
@@ -17,6 +17,7 @@ export const AppRouter = () => {
           <Route path="/vacantes" element={<Vacantes />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registrarme" element={<Registrarme />} />
+          <Route path="/vacante/:id" element={<Vacante/>} />
         </Route>
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
       </Routes>

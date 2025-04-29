@@ -1,7 +1,7 @@
   
 import os
 from flask_admin import Admin
-from .models import db, User, Favorites,Perfil, CV, Empresa,Trabajo, Postulaciones
+from .models import db, User, Favorites,Perfil, CV, Empresa,Trabajo, Postulacion
 from flask_admin.contrib.sqla import ModelView
 
 class FavoriteAdmin(ModelView):
@@ -21,6 +21,6 @@ def setup_admin(app):
     admin.add_view(ModelView(CV, db.session))
     admin.add_view(ModelView(Empresa, db.session))
     admin.add_view(ModelView(Trabajo, db.session))
-    admin.add_view(ModelView(Postulaciones, db.session))
+    admin.add_view(ModelView(Postulacion, db.session))
     # You can duplicate that line to add new models
     # admin.add_view(ModelView(YourModelName, db.session))
