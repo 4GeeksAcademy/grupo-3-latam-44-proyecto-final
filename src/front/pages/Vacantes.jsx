@@ -8,8 +8,10 @@ export const Vacantes = () => {
     const [listadoVacantes, setListadoVacantes] = useState([]);
      const [seleccion, setSeleccion] = useState("")
 
-
-
+    
+    const handleSeleccion = (id) => {
+        setSeleccion(id)
+    }
     const handleListadoVacantes = async()=>{
         try {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes`,{
@@ -39,16 +41,16 @@ export const Vacantes = () => {
         handleListadoVacantes()
                 }, [])
 
+
     return (
-        <div>
-            <div>
-            <div className="row">
+        
+            <div className="row mt-5">
                 <div className="col-3">
                     <nav id="navbar-example3" className="h-100 flex-column align-items-stretch pe-4 border-end">
                         <nav className="nav nav-pills flex-column">
                         { listadoVacantes.map((x) => (
                             <span >
-                            <Vacantecard id={x}/>
+                            <Vacantecard id={x} handleSeleccion={handleSeleccion}/>
                             </span>
                         ))
                         }
@@ -63,7 +65,5 @@ export const Vacantes = () => {
                     </div>
                 </div>
             </div>
-            </div>
-        </div>
     );
 };
