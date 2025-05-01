@@ -1,10 +1,46 @@
 
 // src/front/pages/Vacantes.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import {CardVacanteHome} from "../components/CardVacanteHome"
 
 export const ListaVacantes = () => {
   const navigate = useNavigate();
+
+
+      const [listadoVacantes, setListadoVacantes] = useState([]);
+       const [seleccion, setSeleccion] = useState("")
+  
+  
+  
+      const handleListadoVacantes = async()=>{
+          try {
+              const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes`,{
+                  method:'GET',
+                  headers:{
+                      "Content-Type":"application/json"
+                  }
+                  });
+  
+              const data = await response.json()
+              const listado = []
+              data.forEach(element => {
+                  
+                  listado.push(element.id)
+                  
+              });
+              setListadoVacantes(listado)
+              
+              
+  
+          }catch (error) {
+              console.log(error)
+          }
+      }
+  
+       useEffect(() => {
+          handleListadoVacantes()
+                  }, [])
 
   // Vacantes de ejemplo
   const vacantes = [
@@ -26,10 +62,10 @@ export const ListaVacantes = () => {
   const vacantesPorPagina = 6;
   const indexUltimaVacante = currentPage * vacantesPorPagina;
   const indexPrimeraVacante = indexUltimaVacante - vacantesPorPagina;
-  const vacantesActuales = vacantes.slice(indexPrimeraVacante, indexUltimaVacante);
-  const totalPaginas = Math.ceil(vacantes.length / vacantesPorPagina);
+  const vacantesActuales = listadoVacantes.slice(indexPrimeraVacante, indexUltimaVacante);
+  const totalPaginas = Math.ceil(listadoVacantes.length / vacantesPorPagina);
 
-  const [mostrarModal, setMostrarModal] = useState(false);
+  
 
   const handleAnterior = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
@@ -39,17 +75,7 @@ export const ListaVacantes = () => {
     if (currentPage < totalPaginas) setCurrentPage(currentPage + 1);
   };
 
-  const handleVerDetalles = () => {
-    setMostrarModal(true);
-  };
-
-  const handleCerrarModal = () => {
-    setMostrarModal(false);
-  };
-
-  const handleRegistro = () => {
-    navigate("/registrarme");
-  };
+  
 
   return (
     <>
@@ -57,24 +83,8 @@ export const ListaVacantes = () => {
         <h2 className="text-center mb-4">Vacantes Disponibles</h2>
 
         <div className="row">
-          {vacantesActuales.map((vacante) => (
-            <div className="col-md-4 mb-4" key={vacante.id}>
-              <div className="card h-100 shadow">
-                <div className="card-body d-flex flex-column">
-                  <h5 className="card-title">{vacante.titulo}</h5>
-                  <p className="card-text">
-                    <strong>Ciudad:</strong> {vacante.ciudad}<br />
-                    <strong>Modalidad:</strong> {vacante.modalidad}
-                  </p>
-                  <button
-                    className="btn btn-outline-primary mt-auto"
-                    onClick={handleVerDetalles}
-                  >
-                    Ver Detalles
-                  </button>
-                </div>
-              </div>
-            </div>
+          {listadoVacantes.map((vacante) => (
+            <CardVacanteHome id={vacante} key={vacante.id}/>
           ))}
         </div>
 
@@ -99,36 +109,7 @@ export const ListaVacantes = () => {
           </button>
         </div>
 
-        {/* Modal de Registro */}
-        {mostrarModal && (
-          <div
-            className="modal fade show d-block"
-            tabIndex="-1"
-            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-            onClick={handleCerrarModal}
-          >
-            <div className="modal-dialog modal-dialog-centered" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">¡Descubre más oportunidades! 🚀</h5>
-                  <button type="button" className="btn-close" onClick={handleCerrarModal}></button>
-                </div>
-                <div className="modal-body">
-                  <p>¿Te gustaría descubrir más sobre esta oportunidad?</p>
-                  <p>Regístrate gratis y desbloquea el catálogo completo de vacantes.</p>
-                </div>
-                <div className="modal-footer">
-                  <button className="btn btn-primary" onClick={handleRegistro}>
-                    Registrarme Ahora
-                  </button>
-                  <button className="btn btn-secondary" onClick={handleCerrarModal}>
-                    Cerrar
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+       
       </div>
     </>
   )}
