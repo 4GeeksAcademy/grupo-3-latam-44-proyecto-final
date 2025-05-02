@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react'
+import BotonPostulantes from "./BotonPostulantes";
+
 
 
 export const VacanteSingle = (id) => {
@@ -94,6 +96,7 @@ export const VacanteSingle = (id) => {
                 </div>
 
             </div>
+            <BotonPostulantes vacanteId={id.id} totalPostulantes={2} /> {/* 👈 luego ese 2 será dinámico del backend */}
 
         </div>
     )

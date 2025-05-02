@@ -29,22 +29,13 @@ export const NavbarHome = () => {
 
       {/* Botones de navegación */}
       <div style={{ display: "flex", gap: "15px" }}>
-        <Link to="/" className="btn btn-primary">
-          Home
-        </Link>
-        <Link to="/vacantes" className="btn btn-primary">
-          Vacantes
-        </Link>
-        <Link to="/login" className="btn btn-primary">
-          Login
-        </Link>
-        <Link to="/registrarme" className="btn btn-success">
-          Registrarme
-        </Link>
-        <Link to="/admin-pagos" className="btn btn-warning">
-          Pagos
-        </Link>
+        <Link to="/" className="btn btn-primary">Home</Link>
+        <Link to="/vacantes" className="btn btn-primary">Vacantes</Link>
+        <Link to="/login" className="btn btn-primary">Login</Link>
+        <Link to="/registrarme" className="btn btn-success">Registrarme</Link>
+        <Link to="/empresa/pagos" className="btn btn-warning">Pagos</Link>
 
+        <Link to="/admin" className="btn btn-dark">Admin</Link>     
       </div>
     </nav>
   );

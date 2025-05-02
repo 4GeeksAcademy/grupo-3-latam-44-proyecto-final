@@ -168,8 +168,6 @@ def handle_login_trabajador():
         db.session.rollback()
         return jsonify({"ok": False, "msg":str(e)}),500
 
-
-
 #login usario empresa
 
 @app.route('/login/empresa', methods=['POST'])
@@ -192,10 +190,6 @@ def handle_login_empresa():
         return jsonify({"ok": False, "msg":str(e)}),500
 
 
-
-
-
-
 # logout user empresa y user trabajador
 
 @app.route('/logout', methods= ['POST'])
@@ -207,9 +201,33 @@ def handle_logout():
     db.session.commit()
     return jsonify(msg='JWT revoked'), 200
 
+@app.route('/empresa/<int:id>', methods=['GET'])
+@jwt_required()
+def get_empresa_by_id(id):
+    try:
+        empresa = db.session.execute(db.select(Empresa).filter_by(id=id)).scalar_one_or_none()
 
+        if not empresa:
+            return jsonify({"msg": "Empresa no encontrada"}), 404
 
+        return jsonify({
+            "id": empresa.id,
+            "nombre_comercial": empresa.nombre,
+            "razon_social": empresa.razon_social,
+            "telefono": empresa.telefono,
+            "correo": empresa.email,
+            "descripcion": empresa.descripcion,
+            "direccion": empresa.direccion,
+            "sitio_web": empresa.sitio_web,
+            "rfc": empresa.rfc,
+            "creditos": empresa.creditos_disponibles,
+            "vigencia_inicio": empresa.vigencia_inicio.strftime("%Y-%m-%d") if empresa.vigencia_inicio else None,
+            "vigencia_fin": empresa.vigencia_fin.strftime("%Y-%m-%d") if empresa.vigencia_fin else None
+        }), 200
 
+    except Exception as e:
+        print("❌ Error al obtener empresa:", str(e))
+        return jsonify({"msg": "Error interno del servidor"}), 500
 
 
 # this only runs if `$ python src/main.py` is executed

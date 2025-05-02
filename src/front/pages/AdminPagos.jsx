@@ -1,7 +1,14 @@
 // src/front/pages/AdminPagos.jsx
 import React from "react";
 import { Bar } from "react-chartjs-2";
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from "chart.js";
+import {
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend
+} from "chart.js";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -30,6 +37,7 @@ export const AdminPagos = () => {
     <div className="container mt-5">
       <h2 className="text-center mb-4">Dashboard de Pagos</h2>
 
+      {/* Tabla de pagos */}
       <div className="table-responsive mb-5">
         <table className="table table-hover table-bordered">
           <thead className="table-dark">
@@ -53,7 +61,7 @@ export const AdminPagos = () => {
         </table>
       </div>
 
-      {/* Gráfica de Pagos */}
+      {/* Gráfica de barras */}
       <div className="mb-5">
         <h4 className="text-center mb-4">Ingresos por Empresa</h4>
         <Bar data={data} />
