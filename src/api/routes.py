@@ -1,6 +1,6 @@
 # ✅ routes.py - Código completo y corregido con endpoint de postulados y empresa
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Trabajo, Postulacion, Empresa, Favorites
+from api.models import db, User, Trabajo, Postulacion, Empresa, Favorites, Perfil
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -66,6 +66,37 @@ def get_empresa_by_id(empresa_id):
         return jsonify({"msg": "No autorizado para ver este perfil"}), 403
 
     return jsonify(empresa.serialize()), 200
+
+
+
+# ✅ Endpoint : Obtener perfil de trabajador
+@api.route('/trabajador/<int:user_id>', methods=['GET'])
+@jwt_required()
+def get_trabajador_by_id(user_id):
+    trabajador = User.query.get(user_id)
+    if not trabajador:
+        return jsonify({"msg": "Empresa no encontrada"}), 404
+
+    current_user_id = get_jwt_identity()
+    if trabajador.id != user_id:
+        return jsonify({"msg": "No autorizado para ver este perfil"}), 403
+
+    return jsonify(trabajador.serialize()), 200
+
+
+# ✅ Endpoint : Obtener perfil fecha nacimiento, lugar y acerca de trabajador
+@api.route('/trabajador-perfil/<int:user_id>', methods=['GET'])
+@jwt_required()
+def get_perfil_trabajador_by_id(user_id):
+    trabajador = Perfil.query.get(user_id)
+    if not trabajador:
+        return jsonify({"msg": "Empresa no encontrada"}), 404
+
+    current_user_id = get_jwt_identity()
+    if trabajador.id != user_id:
+        return jsonify({"msg": "No autorizado para ver este perfil"}), 403
+
+    return jsonify(trabajador.serialize()), 200
 
 
 # ✅ Endpoint 2: Actualizar perfil de empresa (PUT)

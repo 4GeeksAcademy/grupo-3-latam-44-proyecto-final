@@ -7,6 +7,9 @@ const UserProfile = (id) => {
   const [nombre, setNombre] = useState()
   const [apellido, setApellido] = useState()
   const [numero, setNumero] = useState()
+  const [fechaNacimiento, setFechaNacimiento] = useState()
+  const [lugar, setLugar] = useState()
+  const [acerca, setAcerca] = useState()
   const  userId  = sessionStorage.getItem('user_id')
 
   
@@ -34,9 +37,36 @@ const UserProfile = (id) => {
                   console.log(error)
               }
           }
+
+
+
+          const handlePerfilInfo = async(userId)=>{
+            try {
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajador-perfil/${userId}`,{
+                    method:'GET',
+                    headers:{
+                        "Content-Type":"application/json",
+                        "Authorization": `Bearer ${sessionStorage.getItem('access_token')}`
+                    }
+                    });
+    
+                const data = await response.json()
+                setFechaNacimiento(data.fecha_nacimiento)
+                setLugar(data.lugar)
+                setAcerca(data.acerca)
+
+            
+    
+            }catch (error) {
+                console.log(error)
+            }
+        }
+
+
       
           useEffect(() => {
             handleUserInfo(userId)
+            handlePerfilInfo(userId)
               }, [])
 
 
@@ -48,7 +78,7 @@ const UserProfile = (id) => {
             <div className="card-body p-5">
               <div className="text-center mb-4">
                 <img
-                  src="https://i.pravatar.cc/150?img=68"
+                  src="https://picsum.photos/150"
                   alt="avatar"
                   className="rounded-circle shadow"
                   style={{ width: "120px", height: "120px", objectFit: "cover" }}
@@ -59,6 +89,7 @@ const UserProfile = (id) => {
               <hr />
 
               <form>
+                <h3 className="pb-3">Información Basica</h3>
                 <div className="row g-3">
                   <div className="col-md-6">
                     <label className="form-label">Nombre</label>
@@ -80,10 +111,63 @@ const UserProfile = (id) => {
 
                 <div className="mt-4 text-center">
                   <button className="btn btn-outline-primary px-4" type="button">
-                    Editar perfil
+                    Editar
                   </button>
                 </div>
               </form>
+              <hr />
+
+              <form>
+                <h3 className="pb-3">Información Adicional</h3>
+                <div className="row g-3">
+                  <div className="col-md-6">
+                    <label className="form-label">Fecha Nacimiento</label>
+                    <input type="text" className="form-control" value={fechaNacimiento} readOnly />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="form-label">Lugar</label>
+                    <input type="text" className="form-control" value={lugar} readOnly />
+                  </div>
+                  <div className="col-md-12">
+                    <label className="form-label">Acerca</label>
+                    <textarea type="text" className="form-control" value={acerca} readOnly />
+                  </div>
+                </div>
+
+                <div className="mt-4 text-center">
+                  <button className="btn btn-outline-primary px-4" type="button">
+                    Editar
+                  </button>
+                </div>
+              </form>
+
+              <hr />
+
+              <form>
+                <h3 className="pb-3">Información </h3>
+                <div className="row g-3">
+                  <div className="col-md-6">
+                    <label className="form-label">Fecha Nacimiento</label>
+                    <input type="text" className="form-control" value={fechaNacimiento} readOnly />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="form-label">Lugar</label>
+                    <input type="text" className="form-control" value={lugar} readOnly />
+                  </div>
+                  <div className="col-md-12">
+                    <label className="form-label">Acerca</label>
+                    <textarea type="text" className="form-control" value={acerca} readOnly />
+                  </div>
+                </div>
+
+                <div className="mt-4 text-center">
+                  <button className="btn btn-outline-primary px-4" type="button">
+                    Editar
+                  </button>
+                </div>
+              </form>
+
+
             </div>
           </div>
         </div>
