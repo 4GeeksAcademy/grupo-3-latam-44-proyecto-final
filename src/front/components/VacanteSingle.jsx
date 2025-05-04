@@ -1,7 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import BotonPostulantes from "./BotonPostulantes";
-
-
+import VerPerfilTrabajadorButton from "../components/VerPerfilTrabajadorButton";
 
 export const VacanteSingle = (id) => {
 

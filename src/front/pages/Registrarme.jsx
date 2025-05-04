@@ -1,11 +1,14 @@
-// src/front/assets/pages/RegistroUser.jsx
+// src/front/pages/Registrarme.jsx
+
+import React from "react";
 import RegisterFormUser from "../components/RegisterFormUser";
 
- export const Registrarme = () => {
+const Registrarme = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
       <RegisterFormUser />
     </div>
   );
-}
+};
 
+export default Registrarme;

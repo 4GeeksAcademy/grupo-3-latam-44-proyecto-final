@@ -1,3 +1,4 @@
+// src/front/pages/PagosEmpresa.jsx
 import React, { useState } from "react";
 
 const paquetes = [
@@ -39,9 +40,9 @@ export const PagosEmpresa = () => {
   const iva = subtotal * 0.16;
   const total = subtotal + iva;
 
-  const totalEnLetras = new Intl.NumberFormat('es-MX', {
-    style: 'currency',
-    currency: 'MXN'
+  const totalEnLetras = new Intl.NumberFormat("es-MX", {
+    style: "currency",
+    currency: "MXN",
   }).format(total);
 
   const generarFolioUnico = () => {
@@ -52,12 +53,19 @@ export const PagosEmpresa = () => {
   const handleConfirmarPago = () => {
     setPagoConfirmado(true);
     numeroNota++;
+    // Aquí va la lógica real para enviar el pago al backend
   };
 
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-4">🧾 Compra de Servicios para Empresas</h2>
 
+      {/* Aviso de créditos */}
+      <div className="alert alert-warning text-center fw-bold fs-5">
+        1 Crédito permite revisar hasta 2 perfiles de postulantes o trabajadores sin postular.
+      </div>
+
+      {/* Selección de paquetes */}
       <div className="row">
         {paquetes.map((paq, index) => (
           <div className="col-md-4 mb-4" key={index}>
@@ -74,7 +82,7 @@ export const PagosEmpresa = () => {
                 <p className="card-text">
                   Duración: {paq.duracion} días<br />
                   Publicaciones: {paq.vacantes}<br />
-                  Crédito para ver postulantes = {paq.creditos}<br />
+                  Crédito para ver postulantes: {paq.creditos}<br />
                   Precio: ${paq.precio.toLocaleString()} MXN
                 </p>
               </div>
@@ -83,6 +91,7 @@ export const PagosEmpresa = () => {
         ))}
       </div>
 
+      {/* Resumen de compra */}
       {paqueteSeleccionado && (
         <div className="mt-5">
           <h4 className="mb-3">Resumen de tu compra</h4>
@@ -96,9 +105,8 @@ export const PagosEmpresa = () => {
               <tr><th>IVA (16%)</th><td>${iva.toFixed(2)}</td></tr>
               <tr><th>Total</th><td><strong>${total.toLocaleString()} ({totalEnLetras})</strong></td></tr>
               <tr><th>Vigencia</th><td>{fechaInicio} al {fechaFin}</td></tr>
-              <tr><th>Número de Nota</th><td>{numeroNota}</td></tr>
-              <tr><th>Folio para Factura</th><td>{generarFolioUnico()}</td></tr>
-              <tr><th>Equivalente</th><td>1 vacante = 1 crédito</td></tr>
+              <tr><th>Folio para Factura</th><td>{pagoConfirmado ? generarFolioUnico() : "Se generará al confirmar"}</td></tr>
+              <tr><th>Créditos Comprados</th><td>{paqueteSeleccionado.creditos}</td></tr>
             </tbody>
           </table>
 
@@ -132,6 +140,7 @@ export const PagosEmpresa = () => {
         </div>
       )}
 
+      {/* Confirmación */}
       {pagoConfirmado && (
         <div className="alert alert-success mt-4 text-center">
           ✅ ¡Pago registrado con éxito! Tus créditos están disponibles y el paquete está activo.
@@ -140,3 +149,4 @@ export const PagosEmpresa = () => {
     </div>
   );
 };
+

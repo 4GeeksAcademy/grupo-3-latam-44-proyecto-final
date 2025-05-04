@@ -7,6 +7,7 @@ import { Layout } from "./components/Layout";
 
 // Páginas públicas
 import { LandingPage } from "./pages/LandingPage";
+import Login from "./pages/Login";
 import { Vacantes } from "./pages/Vacantes";
 import { Registrarme } from "./pages/Registrarme";
 
@@ -20,8 +21,13 @@ import { DashboardAdmin } from "./pages/DashboardAdmin";
 // Vistas específicas
 import { Vacante } from "./pages/Vacante";
 import { PagosEmpresa } from "./pages/PagosEmpresa";
-import { PostulacionesDetail } from "./pages/PostulacionesDetail"; // ✅ Import actualizado
+import { PostulacionesDetail } from "./pages/PostulacionesDetail";
 import { VacantesEmpresa } from "./pages/VacantesEmpresa";
+import { PerfilTrabajador } from "./pages/PerfilTrabajador"; // ✅ corregido
+import { HistorialPagosEmpresa } from "./pages/HistorialPagosEmpresa";
+
+
+
 
 export const AppRouter = () => {
   return (
@@ -29,6 +35,7 @@ export const AppRouter = () => {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/vacantes" element={<Vacantes />} />
           <Route path="/registrarme" element={<Registrarme />} />
 
@@ -38,12 +45,16 @@ export const AppRouter = () => {
           <Route path="/admin-reportes" element={<AdminReportes />} />
           <Route path="/admin-pagos" element={<AdminPagos />} />
           <Route path="/admin" element={<DashboardAdmin />} />
-          <Route path="/empresa/vacantes" element={<VacantesEmpresa />} />
-          {/* Funcionalidad empresas */}
-          <Route path="/empresa/pagos" element={<PagosEmpresa />} />
 
-          {/* Vista de una vacante y sus postulaciones */}
+          {/* Funcionalidad empresas */}
+          <Route path="/empresa/vacantes" element={<VacantesEmpresa />} />
+          <Route path="/empresa/pagos" element={<PagosEmpresa />} />
+          <Route path="/empresa/historial" element={<HistorialPagosEmpresa />} />
+
+
+          {/* Vistas específicas */}
           <Route path="/vacante/:id/postulaciones" element={<PostulacionesDetail />} />
+          <Route path="/trabajador/:id" element={<PerfilTrabajador />} />
         </Route>
 
         {/* Página de error 404 */}

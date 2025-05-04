@@ -3,7 +3,47 @@ from sqlalchemy import String, Boolean, DateTime, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime, timezone
 
+# Inicializa la instancia de la base de datos
+
 db = SQLAlchemy()
+
+# ------------------ MODELO EMPRESA ------------------
+class Empresa(db.Model):
+    __tablename__ = "empresa"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    nombre: Mapped[str] = mapped_column(String(120), nullable=True)
+    razon_social: Mapped[str] = mapped_column(String(120), nullable=True)
+    nombrerp: Mapped[str] = mapped_column(String(120), nullable=True)
+    apellidorp: Mapped[str] = mapped_column(String(120), nullable=True)
+    descripcion: Mapped[str] = mapped_column(String(250), nullable=True)
+    direccion: Mapped[str] = mapped_column(String(120), nullable=True)
+    sitio_web: Mapped[str] = mapped_column(String(220), nullable=True)
+    password: Mapped[str] = mapped_column(nullable=True)
+    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False, index=True)
+    telefono: Mapped[str] = mapped_column(String(120), nullable=True)
+    rfc: Mapped[str] = mapped_column(String(13), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc), nullable=False)
+
+    trabajos = relationship("Trabajo", back_populates="empresa")
+    postulaciones = relationship("Postulacion", back_populates="empresa")
+    creditos = relationship("CreditoEmpresa", back_populates="empresa", cascade="all, delete-orphan")
+    consumos = relationship("ConsumoCredito", back_populates="empresa", cascade="all, delete-orphan")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "razon_social": self.razon_social,
+            "email": self.email,
+            "nombrerp": self.nombrerp,
+            "apellidorp": self.apellidorp,
+            "descripcion": self.descripcion,
+            "direccion": self.direccion,
+            "sitio_web": self.sitio_web,
+            "telefono": self.telefono,
+            "rfc": self.rfc
+        }
 
 # ------------------ USUARIO ------------------
 class User(db.Model):
@@ -12,7 +52,7 @@ class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=True, index=True)
     password: Mapped[str] = mapped_column(nullable=True)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True ,nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=True)
     nombre: Mapped[str] = mapped_column(String(120), nullable=True)
     apellido: Mapped[str] = mapped_column(String(120), nullable=True)
     numero: Mapped[str] = mapped_column(String(120), unique=True, nullable=True)
@@ -81,60 +121,28 @@ class CV(db.Model):
             "user_id": self.user_id
         }
 
-# ------------------ EMPRESA ------------------
-class Empresa(db.Model):
-    __tablename__ = "empresa"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    nombre: Mapped[str] = mapped_column(String(120), nullable=True)
-    razon_social: Mapped[str] = mapped_column(String(120), nullable=True)
-    nombrerp: Mapped[str] = mapped_column(String(120), nullable=True)
-    apellidorp: Mapped[str] = mapped_column(String(120), nullable=True)
-    descripcion: Mapped[str] = mapped_column(String(250), nullable=True)
-    ubicacion: Mapped[str] = mapped_column(String(120), nullable=True)
-    sitio_web: Mapped[str] = mapped_column(String(220), nullable=True)
-    password: Mapped[str] = mapped_column(nullable=True)
-    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False, index=True)
-    telefono: Mapped[str] = mapped_column(String(120), nullable=True)
-    rfc: Mapped[str] = mapped_column(String(13), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(timezone.utc), nullable=False)
-
-    trabajos = relationship("Trabajo", back_populates="empresa")
-    postulaciones = relationship("Postulacion", back_populates="empresa")
-    creditos = relationship("CreditoEmpresa", back_populates="empresa", cascade="all, delete-orphan")
-    consumos = relationship("ConsumoCredito", back_populates="empresa", cascade="all, delete-orphan")
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "nombre": self.nombre,
-            "razon_social": self.razon_social,
-            "email": self.email,
-            "nombrerp": self.nombrerp,
-            "apellidorp": self.apellidorp,
-            "descripcion": self.descripcion,
-            "ubicacion": self.ubicacion,
-            "sitio_web": self.sitio_web,
-            "correo": self.email,
-            "telefono": self.telefono,
-            "rfc": self.rfc
-        }
-
 # ------------------ TRABAJO ------------------
 class Trabajo(db.Model):
     __tablename__ = "trabajos"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     empresa_id: Mapped[int] = mapped_column(ForeignKey("empresa.id"), nullable=True)
-    modalidad: Mapped[str] = mapped_column(String(120), nullable=True)
-    descripcion: Mapped[str] = mapped_column(String(120), nullable=True)
     nombre_puesto: Mapped[str] = mapped_column(String(120), nullable=True)
+    modalidad: Mapped[str] = mapped_column(String(120), nullable=True)
     remuneracion: Mapped[int] = mapped_column(nullable=True)
-    condiciones: Mapped[str] = mapped_column(String(250), nullable=True)
-    responsabilidades: Mapped[str] = mapped_column(String(250), nullable=True)
+    moneda: Mapped[str] = mapped_column(String(10), default="MXN", nullable=True)
+    descripcion_puesto: Mapped[str] = mapped_column(String(500), nullable=True)
     requerimientos: Mapped[str] = mapped_column(String(250), nullable=True)
+    responsabilidades: Mapped[str] = mapped_column(String(250), nullable=True)
+    jornada: Mapped[str] = mapped_column(String(100), nullable=True)
+    dias_laborales: Mapped[str] = mapped_column(String(100), nullable=True)
+    turnos: Mapped[str] = mapped_column(String(150), nullable=True)
+    equipo_utilizado: Mapped[str] = mapped_column(String(200), nullable=True)
+    peligros: Mapped[str] = mapped_column(String(250), nullable=True)
+    demandas_fisicas: Mapped[str] = mapped_column(String(250), nullable=True)
+    estado: Mapped[str] = mapped_column(String(30), default="Activa", nullable=True)
     activo: Mapped[bool] = mapped_column(Boolean(), default=True, nullable=True)
-    fecha_inicio: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    fecha_publicacion: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     fecha_vencimiento: Mapped[datetime] = mapped_column(DateTime, nullable=True)
 
     empresa = relationship("Empresa", back_populates="trabajos")
@@ -145,15 +153,22 @@ class Trabajo(db.Model):
         return {
             "id": self.id,
             "empresa_id": self.empresa_id,
-            "modalidad": self.modalidad,
-            "descripcion": self.descripcion,
             "nombre_puesto": self.nombre_puesto,
+            "modalidad": self.modalidad,
             "remuneracion": self.remuneracion,
-            "condiciones": self.condiciones,
+            "moneda": self.moneda,
+            "descripcion_puesto": self.descripcion_puesto,
             "requerimientos": self.requerimientos,
             "responsabilidades": self.responsabilidades,
+            "jornada": self.jornada,
+            "dias_laborales": self.dias_laborales,
+            "turnos": self.turnos,
+            "equipo_utilizado": self.equipo_utilizado,
+            "peligros": self.peligros,
+            "demandas_fisicas": self.demandas_fisicas,
+            "estado": self.estado,
             "activo": self.activo,
-            "fecha_inicio": self.fecha_inicio,
+            "fecha_publicacion": self.fecha_publicacion,
             "fecha_vencimiento": self.fecha_vencimiento
         }
 
@@ -198,10 +213,10 @@ class Favorites(db.Model):
 # ------------------ CRÉDITOS ------------------
 class CreditoEmpresa(db.Model):
     __tablename__ = 'creditos_empresa'
-    
+
     id: Mapped[int] = mapped_column(primary_key=True)
     empresa_id: Mapped[int] = mapped_column(ForeignKey("empresa.id"))
-    paquete: Mapped[str] = mapped_column(String(50))  # Básico, Pro, Premium
+    paquete: Mapped[str] = mapped_column(String(50))
     total_creditos: Mapped[int] = mapped_column(Integer, nullable=False)
     creditos_usados: Mapped[int] = mapped_column(Integer, default=0)
     fecha_compra: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
@@ -216,7 +231,7 @@ class CreditoEmpresa(db.Model):
     def creditos_disponibles(self):
         return self.total_creditos - self.creditos_usados
 
-# ------------------ CONSUMO ------------------
+# ------------------ CONSUMO CRÉDITOS ------------------
 class ConsumoCredito(db.Model):
     __tablename__ = 'consumos_credito'
 
@@ -224,7 +239,7 @@ class ConsumoCredito(db.Model):
     empresa_id: Mapped[int] = mapped_column(ForeignKey("empresa.id"))
     postulante_id: Mapped[int] = mapped_column(Integer)
     vacante_id: Mapped[int] = mapped_column(Integer)
-    tipo_accion: Mapped[str] = mapped_column(String(50))  # Ej: ver_contacto
+    tipo_accion: Mapped[str] = mapped_column(String(50))
     fecha_consumo: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     empresa = relationship("Empresa", back_populates="consumos")

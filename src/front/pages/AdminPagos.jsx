@@ -20,6 +20,8 @@ export const AdminPagos = () => {
     { id: 4, empresa: "Empresa XYZ", monto: 600, fecha: "2024-06-06" },
   ];
 
+  const totalPagado = pagos.reduce((acum, pago) => acum + pago.monto, 0);
+
   const data = {
     labels: pagos.map((pago) => pago.empresa),
     datasets: [
@@ -57,6 +59,12 @@ export const AdminPagos = () => {
                 <td>{pago.fecha}</td>
               </tr>
             ))}
+            {/* Fila de total */}
+            <tr className="table-secondary fw-bold">
+              <td colSpan="2" className="text-end">TOTAL</td>
+              <td>${totalPagado.toLocaleString()}</td>
+              <td></td>
+            </tr>
           </tbody>
         </table>
       </div>
