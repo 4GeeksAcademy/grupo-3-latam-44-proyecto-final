@@ -52,6 +52,7 @@ const LoginFormUser = () => {
         const response_data = await response.json();
   
         sessionStorage.setItem("access_token", response_data.access_token)
+        sessionStorage.setItem("user_id", response_data.user_id)
         setInfoData(response_data)
   
         navigate(`/perfil/user/${response_data.user_id}`)

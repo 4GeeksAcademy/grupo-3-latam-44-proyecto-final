@@ -1,6 +1,45 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom"
 
-const UserProfile = () => {
+const UserProfile = (id) => {
+
+  const [mail, setMail] = useState()
+  const [nombre, setNombre] = useState()
+  const [apellido, setApellido] = useState()
+  const [numero, setNumero] = useState()
+  const  userId  = sessionStorage.getItem('user_id')
+
+  
+      console.log(userId)
+      
+          const handleUserInfo = async(userId)=>{
+              try {
+                  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajador/${userId}`,{
+                      method:'GET',
+                      headers:{
+                          "Content-Type":"application/json",
+                          "Authorization": `Bearer ${sessionStorage.getItem('access_token')}`
+                      }
+                      });
+      
+                  const data = await response.json()
+                  setMail(data.email)
+                  setNombre(data.nombre)
+                  setApellido(data.apellido)
+                  setNumero(data.numero)
+
+              
+      
+              }catch (error) {
+                  console.log(error)
+              }
+          }
+      
+          useEffect(() => {
+            handleUserInfo(userId)
+              }, [])
+
+
   return (
     <div className="container py-5">
       <div className="row justify-content-center">
@@ -14,8 +53,7 @@ const UserProfile = () => {
                   className="rounded-circle shadow"
                   style={{ width: "120px", height: "120px", objectFit: "cover" }}
                 />
-                <h3 className="mt-3 fw-bold">Levi Villarreal</h3>
-                <p className="text-muted mb-0">Desarrollador Full Stack</p>
+                <h3 className="mt-3 fw-bold">{nombre} {apellido}</h3>
               </div>
 
               <hr />
@@ -24,23 +62,19 @@ const UserProfile = () => {
                 <div className="row g-3">
                   <div className="col-md-6">
                     <label className="form-label">Nombre</label>
-                    <input type="text" className="form-control" value="Levi" readOnly />
+                    <input type="text" className="form-control" value={nombre} readOnly />
                   </div>
                   <div className="col-md-6">
                     <label className="form-label">Apellido</label>
-                    <input type="text" className="form-control" value="Villarreal" readOnly />
+                    <input type="text" className="form-control" value={apellido} readOnly />
                   </div>
                   <div className="col-md-6">
                     <label className="form-label">Correo</label>
-                    <input type="email" className="form-control" value="levi@email.com" readOnly />
+                    <input type="email" className="form-control" value={mail} readOnly />
                   </div>
                   <div className="col-md-6">
                     <label className="form-label">Teléfono</label>
-                    <input type="text" className="form-control" value="+52 442 123 4567" readOnly />
-                  </div>
-                  <div className="col-12">
-                    <label className="form-label">Sobre mí</label>
-                    <textarea className="form-control" rows="3" placeholder="Escribe algo sobre ti..." defaultValue="Amante de la química, los videojuegos y la programación." readOnly />
+                    <input type="text" className="form-control" value={numero} readOnly />
                   </div>
                 </div>
 
