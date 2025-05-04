@@ -20,6 +20,10 @@ export const VacanteSingle = (id) => {
         navigate(`/vacante/${id.id}`);
       };
 
+    const handleFavorites = () => {
+        
+    };
+
     const handleVacante = async(id)=>{
         try {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${id}`,{

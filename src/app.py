@@ -161,7 +161,7 @@ def handle_login_trabajador():
 
         access_token = create_access_token(identity=str(user.id))
         
-        return jsonify({"ok":True, "msg": "Login exitoso", "access_token":access_token}),200
+        return jsonify({"ok":True, "msg": "Login exitoso", "access_token":access_token, "user_id":user.id}),200
     
     except Exception as e:
         print("Error: ", str(e))

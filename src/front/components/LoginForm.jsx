@@ -54,7 +54,7 @@ const LoginFormUser = () => {
         sessionStorage.setItem("access_token", response_data.access_token)
         setInfoData(response_data)
   
-        navigate("/perfil")
+        navigate(`/perfil/user/${response_data.user_id}`)
   
       } catch (error) {
         console.error(error)

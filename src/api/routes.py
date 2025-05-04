@@ -1,6 +1,6 @@
 # ✅ routes.py - Código completo y corregido con endpoint de postulados y empresa
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Trabajo, Postulacion, Empresa
+from api.models import db, User, Trabajo, Postulacion, Empresa, Favorites
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -124,6 +124,8 @@ def update_empresa_by_id(empresa_id):
     db.session.commit()
     return jsonify({"msg": "Perfil de empresa actualizado con éxito"}), 200
 
+
+
 # ✅ Endpoint 3: Publicar nueva vacante (POST)
 @api.route('/empresa/<int:empresa_id>/vacantes', methods=['POST'])
 @jwt_required()
@@ -153,6 +155,8 @@ def crear_vacante(empresa_id):
     db.session.add(nueva)
     db.session.commit()
     return jsonify({"msg": "Vacante publicada con éxito"}), 201
+
+
 
 # ✅ Endpoint 4: Listado de postulantes por empresa
 @api.route('/empresa/<int:empresa_id>/postulantes', methods=['GET'])
@@ -192,3 +196,25 @@ def cambiar_estado_vacante(empresa_id, vacante_id):
     trabajo.activo = data.get("activo", trabajo.activo)
     db.session.commit()
     return jsonify({"msg": "Estado de vacante actualizado"}), 200
+
+
+    #Agregar Favorito
+
+@api.route("/favorite/<int:user_id>/<int:vacante_id>", methods=["POST"])
+def create_fav_people(user_id, vacante_id):
+    data = request.get_json(silent=True)
+
+    if not data or "user_id" not in data:
+        return jsonify({"error": "Datos incompletos"}), 400
+
+    try:
+        fav_people = Favorites(id_trabajador=user_id,
+                    id_trabajo=vacante_id
+                    )
+        db.session.add(fav_people)
+        db.session.commit()
+        return jsonify(fav_people.serialize()), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
