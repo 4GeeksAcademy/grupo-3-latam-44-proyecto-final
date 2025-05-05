@@ -3,14 +3,30 @@ import { Link, useParams } from "react-router-dom"
 
 const UserProfile = (id) => {
 
+
+  const  userId  = sessionStorage.getItem('user_id')
+
+  //infor user
   const [mail, setMail] = useState()
   const [nombre, setNombre] = useState()
   const [apellido, setApellido] = useState()
   const [numero, setNumero] = useState()
+
+  //info perfil
   const [fechaNacimiento, setFechaNacimiento] = useState()
   const [lugar, setLugar] = useState()
   const [acerca, setAcerca] = useState()
-  const  userId  = sessionStorage.getItem('user_id')
+  
+
+  //info cv
+  const [portafolio, setPortafolio] = useState()
+  const [experiencia, setExperiencia] = useState()
+  const [cursos, setCursos] = useState()
+  const [capacitaciones, setCapacitaciones] = useState()
+  const [estudios, setEstudios] = useState()
+  const [idiomas, setIdiomas] = useState()
+  const [tecnologia, setTecnologia] = useState()
+
 
   
       console.log(userId)
@@ -61,6 +77,33 @@ const UserProfile = (id) => {
                 console.log(error)
             }
         }
+
+        const handleCVInfo = async(userId)=>{
+          try {
+              const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajador-cv/${userId}`,{
+                  method:'GET',
+                  headers:{
+                      "Content-Type":"application/json",
+                      "Authorization": `Bearer ${sessionStorage.getItem('access_token')}`
+                  }
+                  });
+  
+              const data = await response.json()
+              setPortafolio(data.portafolio)
+              setExperiencia(data.experiencia)
+              setCursos(data.cursos)
+              setCapacitaciones(data.capacitaciones)
+              setEstudios(data.estudios)
+              setIdiomas(data.idiomas)
+              setTecnologia(data.tecnologia)
+
+
+          
+  
+          }catch (error) {
+              console.log(error)
+          }
+      }
 
 
       
@@ -144,19 +187,35 @@ const UserProfile = (id) => {
               <hr />
 
               <form>
-                <h3 className="pb-3">Información </h3>
+                <h3 className="pb-3">CV</h3>
                 <div className="row g-3">
-                  <div className="col-md-6">
-                    <label className="form-label">Fecha Nacimiento</label>
-                    <input type="text" className="form-control" value={fechaNacimiento} readOnly />
-                  </div>
-                  <div className="col-md-6">
-                    <label className="form-label">Lugar</label>
-                    <input type="text" className="form-control" value={lugar} readOnly />
+                  <div className="col-md-12">
+                    <label className="form-label">Portafolio</label>
+                    <textarea type="text" className="form-control" value={portafolio} readOnly />
                   </div>
                   <div className="col-md-12">
-                    <label className="form-label">Acerca</label>
-                    <textarea type="text" className="form-control" value={acerca} readOnly />
+                    <label className="form-label">Experiencia</label>
+                    <textarea type="text" className="form-control" value={experiencia} readOnly />
+                  </div>
+                  <div className="col-md-12">
+                    <label className="form-label">Cursos</label>
+                    <textarea type="text" className="form-control" value={cursos} readOnly />
+                  </div>
+                  <div className="col-md-12">
+                    <label className="form-label">Capacitaciones</label>
+                    <textarea type="text" className="form-control" value={capacitaciones} readOnly />
+                  </div>
+                  <div className="col-md-12">
+                    <label className="form-label">Estudios</label>
+                    <textarea type="text" className="form-control" value={estudios} readOnly />
+                  </div>
+                  <div className="col-md-12">
+                    <label className="form-label">Idiomas</label>
+                    <textarea type="text" className="form-control" value={idiomas} readOnly />
+                  </div>
+                  <div className="col-md-12">
+                    <label className="form-label">Tecnologia</label>
+                    <textarea type="text" className="form-control" value={tecnologia} readOnly />
                   </div>
                 </div>
 

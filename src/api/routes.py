@@ -1,6 +1,6 @@
 # ✅ routes.py - Código completo y corregido con endpoint de postulados y empresa
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Trabajo, Postulacion, Empresa, Favorites, Perfil
+from api.models import db, User, Trabajo, Postulacion, Empresa, Favorites, Perfil, CV
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -99,6 +99,21 @@ def get_perfil_trabajador_by_id(user_id):
     return jsonify(trabajador.serialize()), 200
 
 
+# ✅ Endpoint : Obtener CV de trabajador
+@api.route('/trabajador-cv/<int:user_id>', methods=['GET'])
+@jwt_required()
+def get_cv_trabajador_by_id(user_id):
+    trabajador = CV.query.get(user_id)
+    if not trabajador:
+        return jsonify({"msg": "Empresa no encontrada"}), 404
+
+    current_user_id = get_jwt_identity()
+    if trabajador.id != user_id:
+        return jsonify({"msg": "No autorizado para ver este perfil"}), 403
+
+    return jsonify(trabajador.serialize()), 200
+
+
 # ✅ Endpoint 2: Actualizar perfil de empresa (PUT)
 
 
@@ -112,7 +127,7 @@ def get_vacante_by_id(vacante_id):
     return jsonify(vacante.serialize()), 200
 
 
-
+# mostrar listado de vacantes
 @api.route('/vacantes', methods=['GET'])
 def handle_vacantes():
     try:
