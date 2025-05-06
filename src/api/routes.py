@@ -128,6 +128,22 @@ def create_perfil_user():
 
 
 
+# ✅ Endpoint : Obtener cv de trabajador
+@api.route('/trabajador-cv/<int:user_id>', methods=['GET'])
+@jwt_required()
+def get_perfil_trabajador_by_id(user_id):
+    trabajador = db.session.execute(db.select(CV).filter_by(user_id=user_id)).scalar_one_or_none()
+    if not trabajador:
+        return jsonify({"msg": "Empresa no encontrada"}), 404
+
+    current_user_id = get_jwt_identity()
+    if trabajador.user_id != user_id:
+        return jsonify({"msg": "No autorizado para ver este perfil"}), 403
+
+    return jsonify(trabajador.serialize()), 200
+
+
+
 # ✅ Endpoint : Obtener perfil fecha nacimiento, lugar y acerca de trabajador
 @api.route('/trabajador-perfil/<int:user_id>', methods=['GET'])
 @jwt_required()
