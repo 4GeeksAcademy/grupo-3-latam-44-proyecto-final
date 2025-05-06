@@ -7,7 +7,7 @@ export const EmpresaProfile = (id) => {
     const userId = sessionStorage.getItem('user_id')
 
     //infor user
-    
+
     const [nombre, setNombre] = useState()
     const [razonSocial, setRazonSocial] = useState()
     const [nombreRp, setNombreRp] = useState()
@@ -18,7 +18,7 @@ export const EmpresaProfile = (id) => {
     const [email, setEmail] = useState()
     const [telefono, setTelefono] = useState()
     const [rfc, setRfc] = useState()
-    
+
 
 
 
@@ -43,7 +43,7 @@ export const EmpresaProfile = (id) => {
             setEmail(data.email)
             setTelefono(data.telefono)
             setRfc(data.rfc)
-            
+
 
 
 
@@ -54,7 +54,7 @@ export const EmpresaProfile = (id) => {
 
 
 
-    
+
     const handleEditarPerfil = async () => {
         const data = {
 
@@ -62,12 +62,12 @@ export const EmpresaProfile = (id) => {
             "razon_socia": razonSocial,
             "nombrerp": nombreRp,
             "apellidorp": apellidoRp,
-            "descripcion":descripcion,
-            "ubicacion":ubicacion,
-            "sitio_web":sitioWeb,
-            "email":email,
-            "telefono":telefono,
-            "rfc":rfc
+            "descripcion": descripcion,
+            "ubicacion": ubicacion,
+            "sitio_web": sitioWeb,
+            "email": email,
+            "telefono": telefono,
+            "rfc": rfc
 
         };
         try {
@@ -105,8 +105,18 @@ export const EmpresaProfile = (id) => {
     return (
         <div className="container py-5">
             <div className="row justify-content-center">
+
                 <div className="col-md-8">
                     <div className="card shadow-lg border-0 rounded-4">
+                        <div className="d-flex justify-content-end m-3">
+                            <Link to="/nueva-vacante">
+                                <button className="btn btn-outline-primary px-4" type="button"
+
+                                >
+                                    Crear Vacante
+                                </button>
+                            </Link>
+                        </div>
                         <div className="card-body p-5">
                             <div className="text-center mb-4">
                                 <img
@@ -145,10 +155,10 @@ export const EmpresaProfile = (id) => {
                                 <h3 className="pb-3 pt-2">Información Adicional</h3>
                                 <div className="row g-3">
                                     <div className="col-md-6">
-                                        <label className="form-label">Descripcion</label>
-                                        <input type="text" className="form-control" value={descripcion}
+                                        <label className="form-label">Sitio Web</label>
+                                        <input type="text" className="form-control" value={sitioWeb}
                                             onChange={(e) => {
-                                                setDescripcion(e.target.value)
+                                                setsitioWeb(e.target.value)
                                             }}
                                         />
                                     </div>
@@ -161,21 +171,22 @@ export const EmpresaProfile = (id) => {
                                         />
                                     </div>
                                     <div className="col-md-12">
-                                        <label className="form-label">Sitio Web</label>
-                                        <textarea type="text" className="form-control" value={sitioWeb}
-                                            onChange={(e) => {
-                                                setsitioWeb(e.target.value)
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="col-md-12">
                                         <label className="form-label">rfc</label>
-                                        <textarea type="text" className="form-control" value={rfc}
+                                        <input type="text" className="form-control" value={rfc}
                                             onChange={(e) => {
                                                 setRfc(e.target.value)
                                             }}
                                         />
                                     </div>
+                                    <div className="col-md-12">
+                                        <label className="form-label">Descripcion</label>
+                                        <textarea type="text" className="form-control" value={descripcion}
+                                            onChange={(e) => {
+                                                setDescripcion(e.target.value)
+                                            }}
+                                        />
+                                    </div>
+                                   
                                 </div>
 
                                 <div className="mt-4 text-center">
@@ -186,7 +197,7 @@ export const EmpresaProfile = (id) => {
                                     </button>
                                 </div>
                             </form>
-                                            
+
 
                         </div>
                     </div>

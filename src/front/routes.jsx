@@ -11,6 +11,7 @@ import {Vacante} from "./pages/Vacante"
 import { PerfilTrabajador } from "./pages/PerfilTrabajador";
 import PerfilUser from "./pages/PerfilUser";
 import { PerfilEmpresa } from "./pages/PerfilEmpresa";
+import { CrearVacante } from "./pages/CrearVacante";
 export const AppRouter = () => {
   return (
     <BrowserRouter>
@@ -18,6 +19,7 @@ export const AppRouter = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<LandingPage />} />
           <Route path="/vacantes" element={<Vacantes />} />
+          <Route path="/nueva-vacante" element={<CrearVacante />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registrarme" element={<Registrarme />} />
           <Route path="/vacante/:id" element={<Vacante/>} />
