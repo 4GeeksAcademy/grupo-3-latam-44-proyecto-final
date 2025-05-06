@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-export const Vacantecard = (id) => {
+export const Vacantecard = ({id, handleSeleccion}) => {
 
         const [nombrePuesto, setNombrePuesto] = useState()
         const [modalidad, setModalidad] = useState()
@@ -9,7 +9,7 @@ export const Vacantecard = (id) => {
     
         const handleVacante = async()=>{
             try {
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${id.id}`,{
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${id}`,{
                     method:'GET',
                     headers:{
                         "Content-Type":"application/json"
@@ -42,7 +42,7 @@ export const Vacantecard = (id) => {
             <p>{modalidad}</p>
         </div>
         <div>
-            <button type="button" className="btn btn-success btn-sm">Postularme</button>
+            <button type="button" className="btn btn-success btn-sm" onClick={()=>handleSeleccion(id)}>Ver</button>
         </div>
     </div>
   )
