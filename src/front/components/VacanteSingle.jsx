@@ -1,7 +1,11 @@
 import React, {useState, useEffect} from 'react'
-import VerPerfilTrabajadorButton from "../components/VerPerfilTrabajadorButton";
+import VerPerfilTrabajadorButton from "../components/VerPerfilTrabajadorButton";import { useNavigate } from "react-router-dom";
 
 export const VacanteSingle = (id) => {
+
+    const navigate = useNavigate();
+
+    console.log(id.id)
 
     const [nombrePuesto, setNombrePuesto] = useState()
     const [modalidad, setModalidad] = useState()
@@ -12,9 +16,17 @@ export const VacanteSingle = (id) => {
     const [responsabilidades, setResponsbilidades] = useState()
 
 
-    const handleVacante = async()=>{
+    const handleExpandVacante = () => {
+        navigate(`/vacante/${id.id}`);
+      };
+
+    const handleFavorites = () => {
+        
+    };
+
+    const handleVacante = async(id)=>{
         try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${id.id}`,{
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${id}`,{
                 method:'GET',
                 headers:{
                     "Content-Type":"application/json"
@@ -38,8 +50,8 @@ export const VacanteSingle = (id) => {
     }
 
     useEffect(() => {
-        handleVacante()
-        }, [])
+        handleVacante(id.id)
+        }, [id.id])
 
 
     return (
@@ -50,8 +62,8 @@ export const VacanteSingle = (id) => {
                     <h6>Company Name</h6>
                 </div>
                 <div>
+                    <button type="button" onClick={handleExpandVacante} className="btn"><i className="fa-solid fa-expand"></i></button>
                     <button type="button" className="btn"><i className="fa-regular fa-star" /></button>
-                    <button type="button" className="btn"><i className="fa-solid fa-x" /></button>
                 </div>
             </div>
             <div className='d-flex justify-content-between mb-3'>

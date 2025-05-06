@@ -128,8 +128,9 @@ def handle_login_trabajador():
             return jsonify({"msg": "Credenciales incorrectas"}), 401
 
         access_token = create_access_token(identity=str(user.id))
-        return jsonify({"ok": True, "msg": "Login exitoso", "access_token": access_token}), 200
-
+        
+        return jsonify({"ok":True, "msg": "Login exitoso", "access_token":access_token, "user_id":user.id}),200
+    
     except Exception as e:
         db.session.rollback()
         return jsonify({"ok": False, "msg": str(e)}), 500

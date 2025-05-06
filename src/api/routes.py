@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Trabajo, Postulacion, Empresa, CreditoEmpresa, ConsumoCredito, Favorites
+from api.models import db, User, Trabajo, Postulacion, Empresa, Favorites, Perfil, CV, CreditoEmpresa, ConsumoCredito, Favorites
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -67,6 +67,142 @@ def actualizar_vacante(id):
                 setattr(vacante, field, data[field])
         db.session.commit()
         return jsonify({"msg": "Vacante actualizada correctamente"}), 200
+    current_user_id = get_jwt_identity()
+    if empresa.id != current_user_id:
+        return jsonify({"msg": "No autorizado para ver este perfil"}), 403
+
+    return jsonify(empresa.serialize()), 200
+
+
+
+# ✅ Endpoint : Obtener perfil de trabajador
+@api.route('/trabajador/<int:user_id>', methods=['GET'])
+@jwt_required()
+def get_trabajador_by_id(user_id):
+    trabajador = User.query.get(user_id)
+    if not trabajador:
+        return jsonify({"msg": "Empresa no encontrada"}), 404
+
+    current_user_id = get_jwt_identity()
+    if trabajador.id != user_id:
+        return jsonify({"msg": "No autorizado para ver este perfil"}), 403
+
+    return jsonify(trabajador.serialize()), 200
+
+
+
+# ✅ Endpoint : Editar perfil de trabajador
+@api.route("/trabajador/perfil", methods=['POST'])
+def create_perfil_user():
+
+    data = request.get_json(silent=True)
+
+    if db.session.execute(db.select(Perfil).filter_by(user_id=data["userId"])).scalar_one_or_none():
+        return jsonify({"error": "Usuario ya existe"}), 409
+    perfil = Perfil(
+        fecha_nacimiento=data.get("fechaNacimiento"),
+        lugar=data.get("lugar"),
+        acerca=data.get("acerca"),
+        user_id=data.get("userId")
+        )
+    db.session.add(perfil)
+    db.session.commit()
+    return jsonify({"message": "Usuario registrado"}), 201
+
+
+# ✅ Endpoint : Editar CV de trabajador
+@api.route("/trabajador/cv", methods=['POST'])
+def create_cv_user():
+
+    data = request.get_json(silent=True)
+
+    if db.session.execute(db.select(CV).filter_by(user_id=data["userId"])).scalar_one_or_none():
+        return jsonify({"error": "Usuario ya existe"}), 409
+    perfil = CV(
+        portafolio=data.get("portafolio"),
+        experiencia=data.get("experiencia"),
+        cursos=data.get("cursos"),
+        capacitaciones=data.get("capacitaciones"),
+        estudios=data.get("estudios"),
+        idiomas=data.get("idiomas"),
+        tecnologia=data.get("tecnologia"),
+        user_id=data.get("userId")
+        )
+    db.session.add(perfil)
+    db.session.commit()
+    return jsonify({"message": "CV de Usuario registrado"}), 201
+
+
+
+# ✅ Endpoint : Obtener cv de trabajador
+@api.route('/trabajador-cv/<int:user_id>', methods=['GET'])
+@jwt_required()
+def get_cv_trabajador_by_id(user_id):
+    trabajador = db.session.execute(db.select(CV).filter_by(user_id=user_id)).scalar_one_or_none()
+    if not trabajador:
+        return jsonify({"msg": "Empresa no encontrada"}), 404
+
+    current_user_id = get_jwt_identity()
+    if trabajador.user_id != user_id:
+        return jsonify({"msg": "No autorizado para ver este perfil"}), 403
+
+    return jsonify(trabajador.serialize()), 200
+
+
+
+# ✅ Endpoint : Obtener perfil fecha nacimiento, lugar y acerca de trabajador
+@api.route('/trabajador-perfil/<int:user_id>', methods=['GET'])
+@jwt_required()
+def get_perfil_trabajador_by_id(user_id):
+    trabajador = db.session.execute(db.select(Perfil).filter_by(user_id=user_id)).scalar_one_or_none()
+    if not trabajador:
+        return jsonify({"msg": "Empresa no encontrada"}), 404
+
+    current_user_id = get_jwt_identity()
+    if trabajador.user_id != user_id:
+        return jsonify({"msg": "No autorizado para ver este perfil"}), 403
+
+    return jsonify(trabajador.serialize()), 200
+
+
+# ✅ Endpoint : Obtener CV de trabajador
+@api.route('/trabajador-cv/<int:user_id>', methods=['GET'])
+@jwt_required()
+#falta hacer que busque por el user_id
+def get_cv_trabajador(user_id):
+    trabajador = CV.query.get(user_id)
+    if not trabajador:
+        return jsonify({"msg": "Empresa no encontrada"}), 404
+
+    current_user_id = get_jwt_identity()
+    if trabajador.id != user_id:
+        return jsonify({"msg": "No autorizado para ver este perfil"}), 403
+
+    return jsonify(trabajador.serialize()), 200
+
+
+# ✅ Endpoint 2: Actualizar perfil de empresa (PUT)
+
+
+
+
+@api.route('/vacantes/<int:vacante_id>', methods=['GET'])
+##@jwt_required()
+def get_vacante_by_id(vacante_id):
+    vacante = Trabajo.query.get(vacante_id)
+
+    return jsonify(vacante.serialize()), 200
+
+
+# mostrar listado de vacantes
+@api.route('/vacantes', methods=['GET'])
+def handle_vacantes():
+    try:
+        vacante_list = []
+        vacante = db.session.execute(db.select(Trabajo)).scalars().all()
+        for p in vacante:
+            vacante_list.append(p.serialize())
+        return jsonify(vacante_list)
     except Exception as e:
         db.session.rollback()
         return jsonify({"msg": "Error al actualizar vacante", "error": str(e)}), 500
@@ -84,6 +220,11 @@ def obtener_vacante(id):
     return jsonify(vacante.serialize()), 200
 
 @api.route('/api/vacantes/<int:id>/postulados', methods=['GET'])
+
+
+
+#actualizar datos empresa
+@api.route('/empresa/<int:empresa_id>', methods=['PUT'])
 @jwt_required()
 def postulados_por_vacante(id):
     vacante = Trabajo.query.get(id)
@@ -112,6 +253,10 @@ def postularme(id):
     db.session.commit()
     return jsonify({"msg": "Postulación exitosa"}), 201
 
+
+
+# ✅ Endpoint 4: Listado de postulantes por empresa
+@api.route('/empresa/<int:empresa_id>/postulantes', methods=['GET'])
 @api.route('/api/trabajador/<int:id>/postulaciones', methods=['GET'])
 @jwt_required()
 def ver_postulaciones(id):
@@ -179,3 +324,38 @@ def obtener_todos_los_pagos():
 
     except Exception as e:
         return jsonify({"msg": "Error al obtener historial de pagos", "error": str(e)}), 500
+def cambiar_estado_vacante(empresa_id, vacante_id):
+    current_user_id = get_jwt_identity()
+    if empresa_id != current_user_id:
+        return jsonify({"msg": "No autorizado"}), 403
+
+    trabajo = Trabajo.query.get(vacante_id)
+    if not trabajo or trabajo.empresa_id != empresa_id:
+        return jsonify({"msg": "Vacante no encontrada"}), 404
+
+    data = request.json
+    trabajo.activo = data.get("activo", trabajo.activo)
+    db.session.commit()
+    return jsonify({"msg": "Estado de vacante actualizado"}), 200
+
+
+    #Agregar Favorito
+
+@api.route("/favorite/<int:user_id>/<int:vacante_id>", methods=["POST"])
+def create_fav_people(user_id, vacante_id):
+    data = request.get_json(silent=True)
+
+    if not data or "user_id" not in data:
+        return jsonify({"error": "Datos incompletos"}), 400
+
+    try:
+        fav_people = Favorites(id_trabajador=user_id,
+                    id_trabajo=vacante_id
+                    )
+        db.session.add(fav_people)
+        db.session.commit()
+        return jsonify(fav_people.serialize()), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+

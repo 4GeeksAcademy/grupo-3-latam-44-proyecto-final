@@ -1,6 +1,7 @@
 // src/front/pages/LandingPage.jsx
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { ListaVacantes } from "../components/ListaVacantes";
 
 // Post-its ÚNICOS y MOTIVADORES
 const postItsData = [
@@ -162,6 +163,7 @@ export const LandingPage = () => {
           }
         `}
       </style>
+      <ListaVacantes/>
     </>
   );
 };

@@ -30,6 +30,8 @@ import { HistorialPagosEmpresa } from "./pages/HistorialPagosEmpresa";
 
 
 
+import { PerfilTrabajador } from "./pages/PerfilTrabajador";
+import PerfilUser from "./pages/PerfilUser";
 export const AppRouter = () => {
   return (
     <BrowserRouter>
@@ -56,6 +58,7 @@ export const AppRouter = () => {
           {/* Vistas específicas */}
           <Route path="/vacante/:id/postulaciones" element={<PostulacionesDetail />} />
           <Route path="/trabajador/:id" element={<PerfilTrabajador />} />
+          <Route path="/perfil/user/:id" element={<PerfilUser/>}/>
         </Route>
 
         {/* Página de error 404 */}
