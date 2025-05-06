@@ -6,6 +6,11 @@ from flask_cors import CORS
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
 import re
+import uuid
+from flask import request, jsonify
+from api.models import db, User  # Ajusta el modelo según tu estructura
+from api.utils import send_reset_email
+from datetime import datetime, timedelta
 
 api = Blueprint('api', __name__)
 
@@ -192,3 +197,84 @@ def cambiar_estado_vacante(empresa_id, vacante_id):
     trabajo.activo = data.get("activo", trabajo.activo)
     db.session.commit()
     return jsonify({"msg": "Estado de vacante actualizado"}), 200
+
+@api.route("/api/forgot-password", methods=["POST"])
+def forgot_password():
+    body = request.get_json()
+    email = body.get("email")
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    token = generate_reset_token(email)
+    reset_link = f"{os.getenv('FRONTEND_URL')}/reset-password/{token}"
+
+    msg = Message("Recupera tu contraseña", sender="noreply@trabajolatam.com", recipients=[email])
+    msg.body = f"Para recuperar tu contraseña haz clic aquí: {reset_link}"
+    mail.send(msg)
+
+    return jsonify({"message": "Correo enviado con el enlace de recuperación."}), 200
+
+@app.route('/api/forgot-password', methods=['POST'])
+def forgot_password():
+    data = request.get_json()
+    email = data.get('email')
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"message": "Correo no registrado"}), 404
+
+    token = str(uuid.uuid4())
+    user.reset_token = token
+    user.token_expires = datetime.utcnow() + timedelta(hours=1)
+    db.session.commit()
+
+    send_reset_email(email, token)
+    return jsonify({"message": "Correo de recuperación enviado"})
+
+@app.route('/api/reset-password/<token>', methods=['POST'])
+def reset_password(token):
+    data = request.get_json()
+    new_password = data.get('password')
+
+    user = User.query.filter_by(reset_token=token).first()
+    if not user or user.token_expires < datetime.utcnow():
+        return jsonify({"message": "Token inválido o expirado"}), 400
+
+    user.password = new_password  # Recuerda encriptarla si usas hashing
+    user.reset_token = None
+    user.token_expires = None
+    db.session.commit()
+
+    return jsonify({"message": "Contraseña actualizada correctamente"})
+
+
+@app.route('/api/forgot-password', methods=['POST'])
+def forgot_password():
+    data = request.get_json()
+    email = data.get('email')
+
+    if not email:
+        return jsonify({'message': 'Correo requerido'}), 400
+
+    # Aquí puedes verificar si el email existe en tu base de datos
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({'message': 'Correo no registrado'}), 404
+
+    # Generar token y link de recuperación
+    token = s.dumps(email, salt='reset-password')
+    link = f"{os.getenv('FRONTEND_URL')}/reset-password/{token}"
+
+    # Enviar correo
+    try:
+        msg = Message('Restablece tu contraseña',
+                      sender=os.getenv('GMAIL_SENDER'),
+                      recipients=[email])
+        msg.body = f"Usa este enlace para restablecer tu contraseña: {link}"
+        mail.send(msg)
+        return jsonify({'message': 'Correo de recuperación enviado'}), 200
+    except Exception as e:
+        print("Error al enviar correo:", e)
+        return jsonify({'message': 'No se pudo enviar el correo'}), 500
