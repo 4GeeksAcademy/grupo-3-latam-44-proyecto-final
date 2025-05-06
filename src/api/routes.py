@@ -109,7 +109,7 @@ def create_perfil_user():
 @api.route('/trabajador-perfil/<int:user_id>', methods=['GET'])
 @jwt_required()
 def get_perfil_trabajador_by_id(user_id):
-    trabajador = Perfil.query.get({"user_id":user_id})
+    trabajador = db.session.execute(db.select(Perfil).filter_by(user_id=user_id)).scalar_one_or_none()
     if not trabajador:
         return jsonify({"msg": "Empresa no encontrada"}), 404
 
