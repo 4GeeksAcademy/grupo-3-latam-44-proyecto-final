@@ -9,7 +9,8 @@ import { Layout } from "./components/Layout";
 import { LandingPage } from "./pages/LandingPage";
 import Login from "./pages/Login";
 import { Vacantes } from "./pages/Vacantes";
-import { Registrarme } from "./pages/Registrarme";
+import Registrarme from "./pages/Registrarme";
+
 
 // Panel de administración
 import { AdminEmpresas } from "./pages/AdminEmpresas";
