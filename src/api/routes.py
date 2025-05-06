@@ -106,7 +106,7 @@ def create_perfil_user():
 
 # ✅ Endpoint : Editar CV de trabajador
 @api.route("/trabajador/cv", methods=['POST'])
-def create_perfil_user():
+def create_cv_user():
 
     data = request.get_json(silent=True)
 
@@ -131,7 +131,7 @@ def create_perfil_user():
 # ✅ Endpoint : Obtener cv de trabajador
 @api.route('/trabajador-cv/<int:user_id>', methods=['GET'])
 @jwt_required()
-def get_perfil_trabajador_by_id(user_id):
+def get_cv_trabajador_by_id(user_id):
     trabajador = db.session.execute(db.select(CV).filter_by(user_id=user_id)).scalar_one_or_none()
     if not trabajador:
         return jsonify({"msg": "Empresa no encontrada"}), 404
@@ -163,7 +163,7 @@ def get_perfil_trabajador_by_id(user_id):
 @api.route('/trabajador-cv/<int:user_id>', methods=['GET'])
 @jwt_required()
 #falta hacer que busque por el user_id
-def get_cv_trabajador_by_id(user_id):
+def get_cv_trabajador(user_id):
     trabajador = CV.query.get(user_id)
     if not trabajador:
         return jsonify({"msg": "Empresa no encontrada"}), 404
