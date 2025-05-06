@@ -84,16 +84,37 @@ def get_trabajador_by_id(user_id):
     return jsonify(trabajador.serialize()), 200
 
 
+
+# ✅ Endpoint : Editar perfil de trabajador
+@api.route("/trabajador/perfil", methods=['POST'])
+def create_perfil_user():
+
+    data = request.get_json(silent=True)
+
+    if db.session.execute(db.select(Perfil).filter_by(user_id=data["userId"])).scalar_one_or_none():
+        return jsonify({"error": "Usuario ya existe"}), 409
+    perfil = Perfil(
+        fecha_nacimiento=data.get("fechaNacimiento"),
+        lugar=data.get("lugar"),
+        acerca=data.get("acerca"),
+        user_id=data.get("userId")
+        )
+    db.session.add(perfil)
+    db.session.commit()
+    return jsonify({"message": "Usuario registrado"}), 201
+
+
+
 # ✅ Endpoint : Obtener perfil fecha nacimiento, lugar y acerca de trabajador
 @api.route('/trabajador-perfil/<int:user_id>', methods=['GET'])
 @jwt_required()
 def get_perfil_trabajador_by_id(user_id):
-    trabajador = Perfil.query.get(user_id)
+    trabajador = Perfil.query.get({"user_id":user_id})
     if not trabajador:
         return jsonify({"msg": "Empresa no encontrada"}), 404
 
     current_user_id = get_jwt_identity()
-    if trabajador.id != user_id:
+    if trabajador.user_id != user_id:
         return jsonify({"msg": "No autorizado para ver este perfil"}), 403
 
     return jsonify(trabajador.serialize()), 200
@@ -102,6 +123,7 @@ def get_perfil_trabajador_by_id(user_id):
 # ✅ Endpoint : Obtener CV de trabajador
 @api.route('/trabajador-cv/<int:user_id>', methods=['GET'])
 @jwt_required()
+#falta hacer que busque por el user_id
 def get_cv_trabajador_by_id(user_id):
     trabajador = CV.query.get(user_id)
     if not trabajador:
@@ -141,6 +163,8 @@ def handle_vacantes():
 
 
 
+
+#actualizar datos empresa
 @api.route('/empresa/<int:empresa_id>', methods=['PUT'])
 @jwt_required()
 def update_empresa_by_id(empresa_id):

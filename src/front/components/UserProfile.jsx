@@ -106,10 +106,43 @@ const UserProfile = (id) => {
       }
 
 
+      const handlePerfil = async () => {
+        const data = {
+          "fechaNacimiento": fechaNacimiento,
+          "lugar": lugar,
+          "acerca": acerca,
+          "userId":sessionStorage.getItem('user_id')
+        };
+          try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajador/perfil`, {
+              method: 'POST',
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${sessionStorage.getItem('access_token')}`
+              },
+              body: JSON.stringify(data)
+            });
+    
+            const dataa = await response.json()
+            setError(dataa.error)
+    
+            if (!response.ok) {
+              throw new Error("Error endpoint");
+    
+            }
+          } catch (error) {
+    
+    
+            console.error(error)
+          }
+      }
+
+
       
           useEffect(() => {
             handleUserInfo(userId)
             handlePerfilInfo(userId)
+            handleCVInfo(userId)
               }, [])
 
 
@@ -165,20 +198,34 @@ const UserProfile = (id) => {
                 <div className="row g-3">
                   <div className="col-md-6">
                     <label className="form-label">Fecha Nacimiento</label>
-                    <input type="text" className="form-control" value={fechaNacimiento} readOnly />
+                    <input type="text" className="form-control" value={fechaNacimiento}
+                    onChange={(e) => {
+                      setFechaNacimiento(e.target.value)
+                    }}
+                    />
                   </div>
                   <div className="col-md-6">
                     <label className="form-label">Lugar</label>
-                    <input type="text" className="form-control" value={lugar} readOnly />
+                    <input type="text" className="form-control" value={lugar}
+                    onChange={(e) => {
+                      setLugar(e.target.value)
+                    }}
+                    />
                   </div>
                   <div className="col-md-12">
                     <label className="form-label">Acerca</label>
-                    <textarea type="text" className="form-control" value={acerca} readOnly />
+                    <textarea type="text" className="form-control" value={acerca}
+                    onChange={(e) => {
+                      setAcerca(e.target.value)
+                    }}
+                    />
                   </div>
                 </div>
 
                 <div className="mt-4 text-center">
-                  <button className="btn btn-outline-primary px-4" type="button">
+                  <button className="btn btn-outline-primary px-4" type="button"
+                  onClick={handlePerfil}
+                  >
                     Editar
                   </button>
                 </div>
@@ -191,31 +238,31 @@ const UserProfile = (id) => {
                 <div className="row g-3">
                   <div className="col-md-12">
                     <label className="form-label">Portafolio</label>
-                    <textarea type="text" className="form-control" value={portafolio} readOnly />
+                    <textarea type="text" className="form-control" value={portafolio} />
                   </div>
                   <div className="col-md-12">
                     <label className="form-label">Experiencia</label>
-                    <textarea type="text" className="form-control" value={experiencia} readOnly />
+                    <textarea type="text" className="form-control" value={experiencia}/>
                   </div>
                   <div className="col-md-12">
                     <label className="form-label">Cursos</label>
-                    <textarea type="text" className="form-control" value={cursos} readOnly />
+                    <textarea type="text" className="form-control" value={cursos} />
                   </div>
                   <div className="col-md-12">
                     <label className="form-label">Capacitaciones</label>
-                    <textarea type="text" className="form-control" value={capacitaciones} readOnly />
+                    <textarea type="text" className="form-control" value={capacitaciones} />
                   </div>
                   <div className="col-md-12">
                     <label className="form-label">Estudios</label>
-                    <textarea type="text" className="form-control" value={estudios} readOnly />
+                    <textarea type="text" className="form-control" value={estudios}  />
                   </div>
                   <div className="col-md-12">
                     <label className="form-label">Idiomas</label>
-                    <textarea type="text" className="form-control" value={idiomas} readOnly />
+                    <textarea type="text" className="form-control" value={idiomas}  />
                   </div>
                   <div className="col-md-12">
                     <label className="form-label">Tecnologia</label>
-                    <textarea type="text" className="form-control" value={tecnologia} readOnly />
+                    <textarea type="text" className="form-control" value={tecnologia}  />
                   </div>
                 </div>
 
