@@ -104,6 +104,29 @@ def create_perfil_user():
     return jsonify({"message": "Usuario registrado"}), 201
 
 
+# ✅ Endpoint : Editar CV de trabajador
+@api.route("/trabajador/cv", methods=['POST'])
+def create_perfil_user():
+
+    data = request.get_json(silent=True)
+
+    if db.session.execute(db.select(CV).filter_by(user_id=data["userId"])).scalar_one_or_none():
+        return jsonify({"error": "Usuario ya existe"}), 409
+    perfil = CV(
+        portafolio=data.get("portafolio"),
+        experiencia=data.get("experiencia"),
+        cursos=data.get("cursos"),
+        capacitaciones=data.get("capacitaciones"),
+        estudios=data.get("estudios"),
+        idiomas=data.get("idiomas"),
+        tecnologia=data.get("tecnologia"),
+        user_id=data.get("userId")
+        )
+    db.session.add(perfil)
+    db.session.commit()
+    return jsonify({"message": "CV de Usuario registrado"}), 201
+
+
 
 # ✅ Endpoint : Obtener perfil fecha nacimiento, lugar y acerca de trabajador
 @api.route('/trabajador-perfil/<int:user_id>', methods=['GET'])
