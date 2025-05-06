@@ -151,7 +151,7 @@ const UserProfile = (id) => {
           "userId":sessionStorage.getItem('user_id')
         };
           try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajador/perfil`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajador/cv`, {
               method: 'POST',
               headers: {
                 "Content-Type": "application/json",
@@ -161,7 +161,7 @@ const UserProfile = (id) => {
             });
     
             const dataa = await response.json()
-            setError(dataa.error)
+            setError(data.error)
     
             if (!response.ok) {
               throw new Error("Error endpoint");

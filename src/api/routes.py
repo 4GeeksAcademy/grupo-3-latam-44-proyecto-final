@@ -159,21 +159,6 @@ def get_perfil_trabajador_by_id(user_id):
     return jsonify(trabajador.serialize()), 200
 
 
-# ✅ Endpoint : Obtener CV de trabajador
-@api.route('/trabajador-cv/<int:user_id>', methods=['GET'])
-@jwt_required()
-#falta hacer que busque por el user_id
-def get_cv_trabajador(user_id):
-    trabajador = CV.query.get(user_id)
-    if not trabajador:
-        return jsonify({"msg": "Empresa no encontrada"}), 404
-
-    current_user_id = get_jwt_identity()
-    if trabajador.id != user_id:
-        return jsonify({"msg": "No autorizado para ver este perfil"}), 403
-
-    return jsonify(trabajador.serialize()), 200
-
 
 # ✅ Endpoint 2: Actualizar perfil de empresa (PUT)
 
@@ -326,4 +311,3 @@ def create_fav_people(user_id, vacante_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
-
