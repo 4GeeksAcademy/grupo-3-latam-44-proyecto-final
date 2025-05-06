@@ -167,6 +167,14 @@ const RegisterFormUser = () => {
             <label htmlFor="nombreEmpresa">Nombre Empresa</label>
           </div>
           <div className="form-floating mb-3" style={toggle}>
+            <input type="text" className="form-control" id="razonSocial" placeholder="Razon Social"
+            onChange={(e) => {
+              setRazonSocial(e.target.value)
+            }}
+            />
+            <label htmlFor="nombreEmpresa">Razon Social</label>
+          </div>
+          <div className="form-floating mb-3" style={toggle}>
             <input type="text" className="form-control" id="nombreRp" placeholder="Nombre Representante"
             onChange={(e) => {
               setNombreRP(e.target.value)

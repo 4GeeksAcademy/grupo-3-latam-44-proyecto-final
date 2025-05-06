@@ -114,7 +114,7 @@ class Empresa(db.Model):
             "descripcion": self.descripcion,
             "ubicacion": self.ubicacion,
             "sitio_web": self.sitio_web,
-            "correo": self.correo,
+            "email": self.email,
             "telefono": self.telefono,
             "rfc": self.rfc,
         }

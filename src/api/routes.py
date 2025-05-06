@@ -62,10 +62,32 @@ def get_empresa_by_id(empresa_id):
         return jsonify({"msg": "Empresa no encontrada"}), 404
 
     current_user_id = get_jwt_identity()
-    if empresa.id != current_user_id:
+    if empresa.id != empresa_id:
         return jsonify({"msg": "No autorizado para ver este perfil"}), 403
 
     return jsonify(empresa.serialize()), 200
+
+
+# ✅ Endpoint 1: Editar perfil de empresa
+@api.route("/empresa/<int:user_id>", methods=["PUT"])
+@jwt_required()
+def update_profile(user_id):
+    data = request.get_json(silent=True)
+    print(data)
+    user = db.session.execute(db.select(Empresa).filter_by(id=user_id)).scalar_one_or_none()
+
+    user.nombrerp = data.get("nombrerp", user.nombrerp)
+    user.apellidorp = data.get("apellidorp", user.apellidorp)
+    user.descripcion = data.get("descripcion", user.descripcion)
+    user.ubicacion = data.get("ubicacion", user.ubicacion)
+    user.sitio_web = data.get("sitio_web", user.sitio_web)
+    user.email = data.get("email", user.email)
+    user.telefono = data.get("telefono", user.telefono)
+    user.rfc = data.get("rfc", user.rfc)
+
+    db.session.commit()
+    return jsonify({"message": "Perfil actualizado"}), 200
+
 
 
 

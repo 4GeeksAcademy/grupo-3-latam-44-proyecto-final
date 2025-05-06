@@ -178,13 +178,13 @@ def handle_login_empresa():
         data = request.get_json(silent=True)
         empresa = db.session.execute(db.select(Empresa).filter_by(email=data["email"])).scalar_one_or_none()
         check = bcrypt.check_password_hash(empresa.password, data["password"])
-        print (check)
+        print(empresa.id)
         if not empresa or check != True:
             return jsonify({"msg": "Credenciales incorrectas"}), 401
 
         access_token = create_access_token(identity=str(empresa.id))
         
-        return jsonify({"ok":True, "msg": "Login exitoso", "access_token":access_token}),200
+        return jsonify({"ok":True, "msg": "Login exitoso", "access_token":access_token, "user_id":empresa.id}),200
     
     except Exception as e:
         print("Error: ", str(e))
