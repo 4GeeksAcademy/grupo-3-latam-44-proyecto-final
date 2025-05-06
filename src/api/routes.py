@@ -1,72 +1,66 @@
+# ✅ routes.py - Código completo y corregido con endpoint de postulados y empresa
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Trabajo, Postulacion, Empresa, Favorites, Perfil, CV, CreditoEmpresa, ConsumoCredito, Favorites
+from api.models import db, User, Trabajo, Postulacion, Empresa, Favorites, Perfil, CV
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from datetime import datetime, timedelta
-import random
+from datetime import datetime
 import re
 
 api = Blueprint('api', __name__)
+
+# Allow CORS requests to this API
 CORS(api)
 
-# ------------------ UTILIDADES ------------------
+@api.route('/hello', methods=['POST', 'GET'])
+def handle_hello():
+    response_body = {
+        "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
+    }
+    return jsonify(response_body), 200
 
-def generar_folio():
-    return ''.join(random.choices('ABCDEFGHJKLMNPQRSTUVWXYZ23456789', k=12))
-
-def obtener_numero_consecutivo():
-    ultimo = db.session.query(CreditoEmpresa).order_by(CreditoEmpresa.numero_consecutivo.desc()).first()
-    return (ultimo.numero_consecutivo + 1) if ultimo else 1
-
-# ------------------ VACANTES: CRUD COMPLETO ------------------
-
-@api.route('/api/vacantes', methods=['POST'])
+# ✅ Endpoint corregido para obtener trabajadores postulados por vacante
+@api.route('/api/vacantes/<int:vacante_id>/postulados', methods=['GET'])
 @jwt_required()
-def crear_vacante_completa():
-    data = request.get_json()
+def get_postulados_por_vacante(vacante_id):
     try:
-        nueva = Trabajo(
-            empresa_id=data.get("empresa_id"),
-            nombre_puesto=data.get("nombre_puesto"),
-            modalidad=data.get("modalidad"),
-            remuneracion=data.get("remuneracion"),
-            moneda=data.get("moneda", "MXN"),
-            descripcion_puesto=data.get("descripcion_puesto"),
-            requerimientos=data.get("requerimientos"),
-            responsabilidades=data.get("responsabilidades"),
-            jornada=data.get("jornada"),
-            dias_laborales=data.get("dias_laborales"),
-            turnos=data.get("turnos"),
-            equipo_utilizado=data.get("equipo_utilizado"),
-            peligros=data.get("peligros"),
-            demandas_fisicas=data.get("demandas_fisicas"),
-            estado=data.get("estado", "Activa"),
-            activo=data.get("activo", True),
-            fecha_publicacion=data.get("fecha_publicacion"),
-            fecha_vencimiento=data.get("fecha_vencimiento")
-        )
-        db.session.add(nueva)
-        db.session.commit()
-        return jsonify({"msg": "Vacante creada correctamente", "id": nueva.id}), 201
+        current_user_id = get_jwt_identity()
+        trabajo = Trabajo.query.get(vacante_id)
+
+        if not trabajo or trabajo.empresa_id != current_user_id:
+            return jsonify({"msg": "No autorizado para ver los postulantes de esta vacante"}), 403
+
+        postulaciones = Postulacion.query.filter_by(id_trabajo=vacante_id).all()
+
+        if not postulaciones:
+            return jsonify({"msg": "No hay trabajadores postulados a esta vacante"}), 404
+
+        trabajadores = []
+        for post in postulaciones:
+            trabajador = User.query.get(post.id_trabajador)
+            if trabajador:
+                trabajadores.append({
+                    "id": trabajador.id,
+                    "nombre": getattr(trabajador, "nombre", "N/A"),
+                    "apellido": getattr(trabajador, "apellido", "N/A"),
+                    "correo": trabajador.email,
+                    "numero": getattr(trabajador, "numero", "N/A"),
+                    "vacante_id": vacante_id
+                })
+
+        return jsonify(trabajadores), 200
+
     except Exception as e:
-        db.session.rollback()
-        return jsonify({"msg": "Error al crear vacante", "error": str(e)}), 500
+        return jsonify({"msg": "Error al obtener postulados", "error": str(e)}), 500
 
-@api.route('/api/vacantes/<int:id>', methods=['PUT'])
+# ✅ Endpoint 1: Obtener perfil de empresa
+@api.route('/empresa/<int:empresa_id>', methods=['GET'])
 @jwt_required()
-def actualizar_vacante(id):
-    vacante = Trabajo.query.get(id)
-    if not vacante:
-        return jsonify({"msg": "Vacante no encontrada"}), 404
+def get_empresa_by_id(empresa_id):
+    empresa = Empresa.query.get(empresa_id)
+    if not empresa:
+        return jsonify({"msg": "Empresa no encontrada"}), 404
 
-    data = request.get_json()
-    try:
-        for field in data:
-            if hasattr(vacante, field):
-                setattr(vacante, field, data[field])
-        db.session.commit()
-        return jsonify({"msg": "Vacante actualizada correctamente"}), 200
     current_user_id = get_jwt_identity()
     if empresa.id != current_user_id:
         return jsonify({"msg": "No autorizado para ver este perfil"}), 403
@@ -204,126 +198,100 @@ def handle_vacantes():
             vacante_list.append(p.serialize())
         return jsonify(vacante_list)
     except Exception as e:
-        db.session.rollback()
-        return jsonify({"msg": "Error al actualizar vacante", "error": str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 
-@api.route('/api/vacantes', methods=['GET'])
-def listar_vacantes():
-    vacantes = Trabajo.query.all()
-    return jsonify([v.serialize() for v in vacantes]), 200
-
-@api.route('/api/vacantes/<int:id>', methods=['GET'])
-def obtener_vacante(id):
-    vacante = Trabajo.query.get(id)
-    if not vacante:
-        return jsonify({"msg": "Vacante no encontrada"}), 404
-    return jsonify(vacante.serialize()), 200
-
-@api.route('/api/vacantes/<int:id>/postulados', methods=['GET'])
 
 
 
 #actualizar datos empresa
 @api.route('/empresa/<int:empresa_id>', methods=['PUT'])
 @jwt_required()
-def postulados_por_vacante(id):
-    vacante = Trabajo.query.get(id)
-    if not vacante:
-        return jsonify({"msg": "Vacante no encontrada"}), 404
-    return jsonify([p.trabajador.serialize() for p in vacante.postulaciones]), 200
+def update_empresa_by_id(empresa_id):
+    empresa = Empresa.query.get(empresa_id)
+    if not empresa:
+        return jsonify({"msg": "Empresa no encontrada"}), 404
 
-@api.route('/api/vacantes/<int:id>/postularme', methods=['POST'])
+    current_user_id = get_jwt_identity()
+    if empresa.id != current_user_id:
+        return jsonify({"msg": "No autorizado para editar esta empresa"}), 403
+
+    data = request.json
+
+    # Validaciones adicionales
+    if 'sitio_web' in data and not re.match(r'^https://', data['sitio_web']):
+        return jsonify({"msg": "El sitio web debe comenzar con https://"}), 400
+
+    campos_obligatorios = ['nombre_comercial', 'razon_social']
+    for campo in campos_obligatorios:
+        if campo in data and not data[campo].strip():
+            return jsonify({"msg": f"El campo {campo} no puede estar vacío"}), 400
+
+    for key in data:
+        if hasattr(empresa, key):
+            setattr(empresa, key, data[key])
+
+    db.session.commit()
+    return jsonify({"msg": "Perfil de empresa actualizado con éxito"}), 200
+
+
+
+# ✅ Endpoint 3: Publicar nueva vacante (POST)
+@api.route('/empresa/<int:empresa_id>/vacantes', methods=['POST'])
 @jwt_required()
-def postularme(id):
-    user_id = get_jwt_identity()
-    existe = Postulacion.query.filter_by(id_trabajo=id, id_trabajador=user_id).first()
-    if existe:
-        return jsonify({"msg": "Ya estás postulado"}), 409
+def crear_vacante(empresa_id):
+    empresa = Empresa.query.get(empresa_id)
+    if not empresa:
+        return jsonify({"msg": "Empresa no encontrada"}), 404
 
-    trabajo = Trabajo.query.get(id)
-    if not trabajo:
-        return jsonify({"msg": "Vacante no encontrada"}), 404
+    current_user_id = get_jwt_identity()
+    if empresa.id != current_user_id:
+        return jsonify({"msg": "No autorizado para publicar vacantes"}), 403
 
-    nueva = Postulacion(
-        id_trabajo=id,
-        id_empresa=trabajo.empresa_id,
-        id_trabajador=user_id
+    data = request.json
+    nueva = Trabajo(
+        empresa_id=empresa_id,
+        modalidad=data.get("modalidad"),
+        nombre_puesto=data.get("nombre_puesto"),
+        remuneracion=data.get("remuneracion"),
+        condiciones=data.get("condiciones"),
+        responsabilidades=data.get("responsabilidades"),
+        requerimientos=data.get("requerimientos"),
+        activo=True,
+        fecha_inicio=datetime.utcnow(),
+        fecha_vencimiento=data.get("fecha_vencimiento")
     )
+
     db.session.add(nueva)
     db.session.commit()
-    return jsonify({"msg": "Postulación exitosa"}), 201
+    return jsonify({"msg": "Vacante publicada con éxito"}), 201
 
 
 
 # ✅ Endpoint 4: Listado de postulantes por empresa
 @api.route('/empresa/<int:empresa_id>/postulantes', methods=['GET'])
-@api.route('/api/trabajador/<int:id>/postulaciones', methods=['GET'])
 @jwt_required()
-def ver_postulaciones(id):
-    postulaciones = Postulacion.query.filter_by(id_trabajador=id).all()
+def listar_postulantes(empresa_id):
+    current_user_id = get_jwt_identity()
+    if empresa_id != current_user_id:
+        return jsonify({"msg": "No autorizado"}), 403
+
+    postulaciones = Postulacion.query.filter_by(id_empresa=empresa_id).all()
     resultado = []
     for p in postulaciones:
-        trabajo = Trabajo.query.get(p.id_trabajo)
-        if trabajo:
-            resultado.append(trabajo.serialize())
-    return jsonify(resultado), 200
-
-@api.route('/api/favoritos/<int:trabajador_id>', methods=['GET'])
-@jwt_required()
-def ver_favoritos(trabajador_id):
-    favoritos = Trabajo.query.join(Favorites).filter(Favorites.id_trabajador == trabajador_id).all()
-    return jsonify([v.serialize() for v in favoritos]), 200
-
-@api.route('/api/creditos/empresa/<int:id>', methods=['GET'])
-@jwt_required()
-def ver_creditos_empresa(id):
-    creditos = CreditoEmpresa.query.filter_by(empresa_id=id).order_by(CreditoEmpresa.fecha_compra.desc()).all()
-    resultado = [{
-        "id": c.id,
-        "paquete": c.paquete,
-        "creditos": c.total_creditos,
-        "usados": c.creditos_usados,
-        "disponibles": c.total_creditos - c.creditos_usados,
-        "fecha_compra": c.fecha_compra.strftime("%Y-%m-%d"),
-        "vigencia_inicio": c.vigencia_inicio.strftime("%Y-%m-%d"),
-        "vigencia_fin": c.vigencia_fin.strftime("%Y-%m-%d"),
-        "folio": c.folio_aleatorio,
-        "monto_pagado": c.monto_pagado  # 👈 Ya lo traemos para el frontend de empresa
-    } for c in creditos]
-    return jsonify(resultado), 200
-
-@api.route('/api/admin/pagos', methods=['GET'])
-@jwt_required()
-def obtener_todos_los_pagos():
-    try:
-        fecha_inicio = request.args.get("inicio")
-        fecha_fin = request.args.get("fin")
-
-        query = db.session.query(CreditoEmpresa, Empresa).join(Empresa)
-
-        if fecha_inicio:
-            query = query.filter(CreditoEmpresa.fecha_compra >= fecha_inicio)
-        if fecha_fin:
-            query = query.filter(CreditoEmpresa.fecha_compra <= fecha_fin)
-
-        resultados = query.order_by(CreditoEmpresa.fecha_compra.desc()).all()
-
-        pagos = []
-        for credito, empresa in resultados:
-            pagos.append({
-                "empresa_id": empresa.id,
-                "empresa_nombre": empresa.nombre_comercial,
-                "fecha_compra": credito.fecha_compra.strftime("%Y-%m-%d"),
-                "monto_pagado": credito.monto_pagado,  # ✅ agregado monto real
-                "paquete": credito.paquete,
-                "creditos": credito.total_creditos,
-                "folio": credito.folio_aleatorio
+        trabajador = User.query.get(p.id_trabajador)
+        if trabajador:
+            resultado.append({
+                "nombre": trabajador.nombre,
+                "correo": trabajador.email,
+                "numero": trabajador.numero,
+                "vacante": p.id_trabajo
             })
 
-        return jsonify(pagos), 200
+    return jsonify(resultado), 200
 
-    except Exception as e:
-        return jsonify({"msg": "Error al obtener historial de pagos", "error": str(e)}), 500
+# ✅ Endpoint 5: Cambiar estado de vacante
+@api.route('/empresa/<int:empresa_id>/vacante/<int:vacante_id>/estado', methods=['PUT'])
+@jwt_required()
 def cambiar_estado_vacante(empresa_id, vacante_id):
     current_user_id = get_jwt_identity()
     if empresa_id != current_user_id:

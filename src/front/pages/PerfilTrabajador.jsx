@@ -1,7 +1,6 @@
-// ✅ PerfilTrabajador.jsx corregido y listo para producción
+// ✅ PerfilTrabajador.jsx listo para producción
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import VerPerfilTrabajadorButton from "../components/VerPerfilTrabajadorButton";
 
 export const PerfilTrabajador = () => {
   const { id } = useParams(); // ID del trabajador
@@ -9,8 +8,8 @@ export const PerfilTrabajador = () => {
   const [error, setError] = useState(null);
 
   const token = sessionStorage.getItem("token");
-  const empresa_id = sessionStorage.getItem("empresa_id"); // ⚠️ Asegúrate de guardar esto tras login
-  const trabajo_id = sessionStorage.getItem("trabajo_id"); // ⚠️ Guardar al entrar a detalle de vacante
+  const empresa_id = 1; // ⚠️ Reemplazar luego con empresa logueada
+  const trabajo_id = 5; // ⚠️ Reemplazar luego con vacante seleccionada
 
   useEffect(() => {
     const getPerfil = async () => {
@@ -78,8 +77,11 @@ export const PerfilTrabajador = () => {
       {/* Botón de desbloqueo si hay campos protegidos */}
       {perfil.correo === "🔒" && (
         <div className="alert alert-warning mt-4 d-flex justify-content-between align-items-center">
-          <span>👀 Este perfil tiene información protegida.</span>
-          <VerPerfilTrabajadorButton trabajadorId={id} vacanteId={trabajo_id} token={token} />
+          <span>👀 Este perfil tiene información protegida.
+          </span>
+          <button className="btn btn-outline-primary">
+            💳 Ver datos de contacto
+          </button>
         </div>
       )}
     </div>

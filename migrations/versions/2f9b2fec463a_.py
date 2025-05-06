@@ -1,14 +1,8 @@
 """empty message
 
-<<<<<<<< HEAD:migrations/versions/4e9592253ecc_.py
-Revision ID: 4e9592253ecc
-Revises: 
-Create Date: 2025-05-06 03:34:18.417237
-========
 Revision ID: 2f9b2fec463a
 Revises: 
 Create Date: 2025-04-29 02:00:34.701679
->>>>>>>> development:migrations/versions/2f9b2fec463a_.py
 
 """
 from alembic import op
@@ -16,11 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-<<<<<<<< HEAD:migrations/versions/4e9592253ecc_.py
-revision = '4e9592253ecc'
-========
 revision = '2f9b2fec463a'
->>>>>>>> development:migrations/versions/2f9b2fec463a_.py
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -44,11 +34,11 @@ def upgrade():
     sa.Column('nombrerp', sa.String(length=120), nullable=True),
     sa.Column('apellidorp', sa.String(length=120), nullable=True),
     sa.Column('descripcion', sa.String(length=250), nullable=True),
-    sa.Column('direccion', sa.String(length=120), nullable=True),
+    sa.Column('ubicacion', sa.String(length=120), nullable=True),
     sa.Column('sitio_web', sa.String(length=220), nullable=True),
     sa.Column('password', sa.String(), nullable=True),
     sa.Column('email', sa.String(length=120), nullable=False),
-    sa.Column('telefono', sa.String(length=20), nullable=True),
+    sa.Column('telefono', sa.String(length=120), nullable=True),
     sa.Column('rfc', sa.String(length=13), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id')
@@ -71,31 +61,6 @@ def upgrade():
     with op.batch_alter_table('usuarios', schema=None) as batch_op:
         batch_op.create_index(batch_op.f('ix_usuarios_email'), ['email'], unique=True)
 
-    op.create_table('consumos_credito',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('empresa_id', sa.Integer(), nullable=False),
-    sa.Column('postulante_id', sa.Integer(), nullable=False),
-    sa.Column('vacante_id', sa.Integer(), nullable=False),
-    sa.Column('tipo_accion', sa.String(length=50), nullable=False),
-    sa.Column('fecha_consumo', sa.DateTime(), nullable=False),
-    sa.ForeignKeyConstraint(['empresa_id'], ['empresa.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('creditos_empresa',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('empresa_id', sa.Integer(), nullable=False),
-    sa.Column('paquete', sa.String(length=50), nullable=False),
-    sa.Column('total_creditos', sa.Integer(), nullable=False),
-    sa.Column('creditos_usados', sa.Integer(), nullable=False),
-    sa.Column('fecha_compra', sa.DateTime(), nullable=False),
-    sa.Column('vigencia_inicio', sa.DateTime(), nullable=False),
-    sa.Column('vigencia_fin', sa.DateTime(), nullable=False),
-    sa.Column('numero_consecutivo', sa.Integer(), nullable=False),
-    sa.Column('folio_aleatorio', sa.String(length=12), nullable=False),
-    sa.ForeignKeyConstraint(['empresa_id'], ['empresa.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('folio_aleatorio')
-    )
     op.create_table('cv',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('portafolio', sa.String(length=220), nullable=True),
@@ -121,22 +86,15 @@ def upgrade():
     op.create_table('trabajos',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('empresa_id', sa.Integer(), nullable=True),
-    sa.Column('nombre_puesto', sa.String(length=120), nullable=True),
     sa.Column('modalidad', sa.String(length=120), nullable=True),
+    sa.Column('descripcion', sa.String(length=120), nullable=True),
+    sa.Column('nombre_puesto', sa.String(length=120), nullable=True),
     sa.Column('remuneracion', sa.Integer(), nullable=True),
-    sa.Column('moneda', sa.String(length=10), nullable=True),
-    sa.Column('descripcion_puesto', sa.String(length=500), nullable=True),
-    sa.Column('requerimientos', sa.String(length=250), nullable=True),
+    sa.Column('condiciones', sa.String(length=250), nullable=True),
     sa.Column('responsabilidades', sa.String(length=250), nullable=True),
-    sa.Column('jornada', sa.String(length=100), nullable=True),
-    sa.Column('dias_laborales', sa.String(length=100), nullable=True),
-    sa.Column('turnos', sa.String(length=150), nullable=True),
-    sa.Column('equipo_utilizado', sa.String(length=200), nullable=True),
-    sa.Column('peligros', sa.String(length=250), nullable=True),
-    sa.Column('demandas_fisicas', sa.String(length=250), nullable=True),
-    sa.Column('estado', sa.String(length=30), nullable=True),
+    sa.Column('requerimientos', sa.String(length=250), nullable=True),
     sa.Column('activo', sa.Boolean(), nullable=True),
-    sa.Column('fecha_publicacion', sa.DateTime(), nullable=True),
+    sa.Column('fecha_inicio', sa.DateTime(), nullable=True),
     sa.Column('fecha_vencimiento', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['empresa_id'], ['empresa.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -169,8 +127,6 @@ def downgrade():
     op.drop_table('trabajos')
     op.drop_table('perfiles')
     op.drop_table('cv')
-    op.drop_table('creditos_empresa')
-    op.drop_table('consumos_credito')
     with op.batch_alter_table('usuarios', schema=None) as batch_op:
         batch_op.drop_index(batch_op.f('ix_usuarios_email'))
 
