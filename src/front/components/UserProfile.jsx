@@ -138,6 +138,45 @@ const UserProfile = (id) => {
       }
 
 
+
+      const handleCV = async () => {
+        const data = {
+          "portafolio": portafolio,
+          "experiencia": experiencia,
+          "cursos": cursos,
+          "capacitaciones": capacitaciones,
+          "estudios": estudios,
+          "idiomas": idiomas,
+          "tecnologia": tecnologia,
+          "userId":sessionStorage.getItem('user_id')
+        };
+          try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajador/perfil`, {
+              method: 'POST',
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${sessionStorage.getItem('access_token')}`
+              },
+              body: JSON.stringify(data)
+            });
+    
+            const dataa = await response.json()
+            setError(dataa.error)
+    
+            if (!response.ok) {
+              throw new Error("Error endpoint");
+    
+            }
+          } catch (error) {
+    
+    
+            console.error(error)
+          }
+      }
+
+
+
+
       
           useEffect(() => {
             handleUserInfo(userId)
@@ -238,36 +277,66 @@ const UserProfile = (id) => {
                 <div className="row g-3">
                   <div className="col-md-12">
                     <label className="form-label">Portafolio</label>
-                    <textarea type="text" className="form-control" value={portafolio} />
+                    <textarea type="text" className="form-control" value={portafolio}
+                    onChange={(e) => {
+                      setPortafolio(e.target.value)
+                    }}
+                    />
                   </div>
                   <div className="col-md-12">
                     <label className="form-label">Experiencia</label>
-                    <textarea type="text" className="form-control" value={experiencia}/>
+                    <textarea type="text" className="form-control" value={experiencia}
+                    onChange={(e) => {
+                      setExperiencia(e.target.value)
+                    }}
+                    />
                   </div>
                   <div className="col-md-12">
                     <label className="form-label">Cursos</label>
-                    <textarea type="text" className="form-control" value={cursos} />
+                    <textarea type="text" className="form-control" value={cursos}
+                    onChange={(e) => {
+                      setCursos(e.target.value)
+                    }}
+                    />
                   </div>
                   <div className="col-md-12">
                     <label className="form-label">Capacitaciones</label>
-                    <textarea type="text" className="form-control" value={capacitaciones} />
+                    <textarea type="text" className="form-control" value={capacitaciones}
+                    onChange={(e) => {
+                      setCapacitaciones(e.target.value)
+                    }}
+                    />
                   </div>
                   <div className="col-md-12">
                     <label className="form-label">Estudios</label>
-                    <textarea type="text" className="form-control" value={estudios}  />
+                    <textarea type="text" className="form-control" value={estudios}
+                    onChange={(e) => {
+                      setEstudios(e.target.value)
+                    }}
+                    />
                   </div>
                   <div className="col-md-12">
                     <label className="form-label">Idiomas</label>
-                    <textarea type="text" className="form-control" value={idiomas}  />
+                    <textarea type="text" className="form-control" value={idiomas}
+                    onChange={(e) => {
+                      setIdiomas(e.target.value)
+                    }}
+                    />
                   </div>
                   <div className="col-md-12">
                     <label className="form-label">Tecnologia</label>
-                    <textarea type="text" className="form-control" value={tecnologia}  />
+                    <textarea type="text" className="form-control" value={tecnologia}
+                    onChange={(e) => {
+                      setTecnologia(e.target.value)
+                    }}
+                    />
                   </div>
                 </div>
 
                 <div className="mt-4 text-center">
-                  <button className="btn btn-outline-primary px-4" type="button">
+                  <button className="btn btn-outline-primary px-4" type="button"
+                  onClick={handleCV}
+                  >
                     Editar
                   </button>
                 </div>
