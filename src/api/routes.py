@@ -205,6 +205,20 @@ def handle_vacantes():
         return jsonify({"error": str(e)}), 500
 
 
+# mostrar listado de vacantes por
+@api.route('/vacantes/empresa/<int:empresa_id>', methods=['GET'])
+def handle_vacantes_empresa(empresa_id):
+    try:
+        vacante_list = []
+        vacante = db.session.execute(db.select(Trabajo).filter_by(empresa_id=empresa_id)).scalars().all()
+        for p in vacante:
+            vacante_list.append(p.serialize())
+        return jsonify(vacante_list)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
 
 
 #actualizar datos empresa

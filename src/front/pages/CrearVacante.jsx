@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export const CrearVacante = () => {
+
+  const navigate = useNavigate()
 
   const empresaId = sessionStorage.getItem('user_id')
 
@@ -38,15 +41,14 @@ export const CrearVacante = () => {
       });
 
       const dataa = await response.json()
-      setError(dataa.error)
 
       if (!response.ok) {
         throw new Error("Error endpoint");
 
       }
+
+      navigate(`/perfil/empresa/${empresaId}/listado-vacantes`)
     } catch (error) {
-
-
       console.error(error)
     }
   }

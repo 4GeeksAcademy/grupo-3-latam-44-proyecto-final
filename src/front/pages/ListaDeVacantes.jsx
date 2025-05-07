@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 
 
 export const ListaDeVacantes = () => {
+
+  const empresaId = sessionStorage.getItem('user_id')
   const [vacantes, setVacantes] = useState([]);
   const [vacanteSeleccionada, setVacanteSeleccionada] = useState(null);
   const [conteoPostulados, setConteoPostulados] = useState({}); // 🟡 Nuevo estado
@@ -11,7 +13,7 @@ export const ListaDeVacantes = () => {
   // ✅ Obtener listado de vacantes y contar postulados
   const getVacantes = async () => {
     try {
-      const res = await fetch("${import.meta.env.VITE_BACKEND_URL}/api/vacantes");
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/empresa/${empresaId}`);
       const data = await res.json();
       setVacantes(data);
 
