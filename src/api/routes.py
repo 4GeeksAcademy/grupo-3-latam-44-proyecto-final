@@ -182,10 +182,7 @@ def get_perfil_trabajador_by_id(user_id):
 
 
 
-# ✅ Endpoint 2: Actualizar perfil de empresa (PUT)
-
-
-
+#obtener vacante
 
 @api.route('/vacantes/<int:vacante_id>', methods=['GET'])
 ##@jwt_required()
@@ -251,20 +248,20 @@ def crear_vacante(empresa_id):
         return jsonify({"msg": "Empresa no encontrada"}), 404
 
     current_user_id = get_jwt_identity()
-    if empresa.id != current_user_id:
+    if empresa.id != empresa_id:
         return jsonify({"msg": "No autorizado para publicar vacantes"}), 403
 
     data = request.json
     nueva = Trabajo(
         empresa_id=empresa_id,
         modalidad=data.get("modalidad"),
+        descripcion=data.get("descripcion"),
         nombre_puesto=data.get("nombre_puesto"),
         remuneracion=data.get("remuneracion"),
         condiciones=data.get("condiciones"),
         responsabilidades=data.get("responsabilidades"),
         requerimientos=data.get("requerimientos"),
-        activo=True,
-        fecha_inicio=datetime.utcnow(),
+        fecha_inicio=data.get("fecha_inicio"),
         fecha_vencimiento=data.get("fecha_vencimiento")
     )
 
