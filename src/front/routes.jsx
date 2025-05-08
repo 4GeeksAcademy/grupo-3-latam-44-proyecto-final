@@ -15,6 +15,7 @@ import { CrearVacante } from "./pages/CrearVacante";
 import { ListaDeVacantes } from "./pages/ListaDeVacantes";
 import { EditarVacante } from "./pages/EditarVacante";
 import { VacantePostulados } from "./pages/VacantePostulados";
+import { TrabajadorPostulado } from "./pages/TrabajadorPostulado";
 export const AppRouter = () => {
   return (
     <BrowserRouter>
@@ -26,9 +27,10 @@ export const AppRouter = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/registrarme" element={<Registrarme />} />
           <Route path="/vacante/:id" element={<Vacante/>} />
-          <Route path="/vacante/postulados" element={<VacantePostulados/>} />
+          <Route path="/vacante/:id/postulados" element={<VacantePostulados/>} />
           <Route path="/vacante/editar/:id" element={<EditarVacante/>} />
           <Route path="/perfil/user/:id" element={<PerfilUser/>}/>
+          <Route path="/perfil/trabajador/:id" element={<TrabajadorPostulado/>} />
           <Route path="/perfil/empresa/:id" element={<PerfilEmpresa/>}/>
           <Route path="/perfil/empresa/:id/listado-vacantes" element={<ListaDeVacantes/>}/>
         </Route>

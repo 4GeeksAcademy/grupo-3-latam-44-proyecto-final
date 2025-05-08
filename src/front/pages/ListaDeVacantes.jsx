@@ -27,7 +27,13 @@ export const ListaDeVacantes = () => {
   // ✅ Obtener número de postulados por vacante
   const getPostuladosCount = async (vacanteId) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${vacanteId}/postulados`);
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${vacanteId}/postulados`,{
+        method:'GET',
+        headers:{
+            "Content-Type":"application/json",
+            "Authorization": `Bearer ${sessionStorage.getItem('access_token')}`
+        }
+        });
       const data = await res.json();
       setConteoPostulados(prev => ({
         ...prev,
@@ -78,7 +84,7 @@ export const ListaDeVacantes = () => {
                 >
                   Editar Vacante
                 </Link>
-                <Link to={`/vacante/postulados`}>
+                <Link to={`/vacante/${v.id}/postulados`}>
                 <span className="badge bg-secondary">
                   {conteoPostulados[v.id] ?? "…"} postulados
                 </span>

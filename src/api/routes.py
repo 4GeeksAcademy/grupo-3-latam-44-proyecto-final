@@ -27,13 +27,13 @@ def get_postulados_por_vacante(vacante_id):
         current_user_id = get_jwt_identity()
         trabajo = Trabajo.query.get(vacante_id)
 
-        if not trabajo or trabajo.empresa_id != current_user_id:
-            return jsonify({"msg": "No autorizado para ver los postulantes de esta vacante"}), 403
+        #if not trabajo or trabajo.empresa_id != current_user_id:
+         #   return jsonify({"msg": "No autorizado para ver los postulantes de esta vacante"}), 403
 
         postulaciones = Postulacion.query.filter_by(id_trabajo=vacante_id).all()
 
-        if not postulaciones:
-            return jsonify({"msg": "No hay trabajadores postulados a esta vacante"}), 404
+        #if not postulaciones:
+         #   return jsonify({"msg": "No hay trabajadores postulados a esta vacante"}), 404
 
         trabajadores = []
         for post in postulaciones:
@@ -207,7 +207,6 @@ def get_perfil_trabajador_by_id(user_id):
 #obtener vacante
 
 @api.route('/vacantes/<int:vacante_id>', methods=['GET'])
-@jwt_required()
 def get_vacante_by_id(vacante_id):
     vacante = Trabajo.query.get(vacante_id)
 

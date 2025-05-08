@@ -2,8 +2,39 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/img/logo.png"; // ✅ Importamos el logo
+import { useNavigate } from "react-router-dom";
 
 export const NavbarHome = () => {
+  const navigate = useNavigate()
+
+  const handleLogout = async()=>{
+
+		try {
+			const response = await fetch (`${import.meta.env.VITE_BACKEND_URL}/logout`, {
+				method:'POST',
+				headers:{
+					"Content-Type":"application/json",
+                    "Authorization": `Bearer ${sessionStorage.getItem('access_token')}`
+				}
+			});
+			if(!response.ok){
+				throw new Error("Error logout endpoint");
+				
+			}
+
+			const responseData = await response.json();
+
+			console.log(responseData)
+
+            sessionStorage.removeItem('access_token')
+
+			navigate("/")
+
+		} catch (error) {
+			console.error(error)
+		}
+	}
+
   return (
     <nav
       className="navbar navbar-expand-lg"
@@ -41,6 +72,9 @@ export const NavbarHome = () => {
         <Link to="/registrarme" className="btn btn-success">
           Registrarme
         </Link>
+        <button onClick={handleLogout}  className="btn btn-danger">
+          Logout
+        </button>
       </div>
     </nav>
   );
