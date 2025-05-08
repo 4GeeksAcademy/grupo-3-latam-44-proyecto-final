@@ -109,10 +109,13 @@ export const EmpresaProfile = (id) => {
                 <div className="col-md-8">
                     <div className="card shadow-lg border-0 rounded-4">
                         <div className="d-flex justify-content-end m-3">
+                        <Link to={`/perfil/empresa/${userId}/listado-vacantes`}>
+                                <button className="btn btn-outline-primary px-4 mx-2" type="button">
+                                    Ver Vacantes
+                                </button>
+                            </Link>
                             <Link to="/nueva-vacante">
-                                <button className="btn btn-outline-primary px-4" type="button"
-
-                                >
+                                <button className="btn btn-outline-primary px-4" type="button">
                                     Crear Vacante
                                 </button>
                             </Link>
@@ -186,7 +189,7 @@ export const EmpresaProfile = (id) => {
                                             }}
                                         />
                                     </div>
-                                   
+
                                 </div>
 
                                 <div className="mt-4 text-center">

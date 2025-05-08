@@ -72,9 +72,17 @@ export const ListaDeVacantes = () => {
                 >
                   🔍 Ver Detalles
                 </Link>
+                <Link
+                  to={`/vacante/editar/${v.id}`}
+                  className={`btn btn-success`}
+                >
+                  Editar Vacante
+                </Link>
+                <Link to={`/vacante/postulados`}>
                 <span className="badge bg-secondary">
                   {conteoPostulados[v.id] ?? "…"} postulados
                 </span>
+                </Link>
               </div>
             </div>
           ))}

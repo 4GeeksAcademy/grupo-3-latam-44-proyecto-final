@@ -20,7 +20,7 @@ def handle_hello():
     return jsonify(response_body), 200
 
 # ✅ Endpoint corregido para obtener trabajadores postulados por vacante
-@api.route('/api/vacantes/<int:vacante_id>/postulados', methods=['GET'])
+@api.route('/vacantes/<int:vacante_id>/postulados', methods=['GET'])
 @jwt_required()
 def get_postulados_por_vacante(vacante_id):
     try:
@@ -87,6 +87,28 @@ def update_profile(user_id):
 
     db.session.commit()
     return jsonify({"message": "Perfil actualizado"}), 200
+
+
+# ✅ Endpoint 1: Editar Vacante
+@api.route("/vacante/<int:vacante_id>", methods=["PUT"])
+@jwt_required()
+def update_vacante(vacante_id):
+    data = request.get_json(silent=True)
+    print(data)
+    vacante = db.session.execute(db.select(Trabajo).filter_by(id=vacante_id)).scalar_one_or_none()
+
+    vacante.modalidad = data.get("modalidad", vacante.modalidad)
+    vacante.descripcion = data.get("descripcion", vacante.descripcion)
+    vacante.nombre_puesto = data.get("nombre_puesto", vacante.nombre_puesto)
+    vacante.remuneracion = data.get("remuneracion", vacante.remuneracion)
+    vacante.condiciones = data.get("condiciones", vacante.condiciones)
+    vacante.responsabilidades = data.get("responsabilidades", vacante.responsabilidades)
+    vacante.requerimientos = data.get("requerimientos", vacante.requerimientos)
+    vacante.fecha_inicio = data.get("fecha_inicio", vacante.fecha_inicio)
+    vacante.fecha_vencimiento = data.get("fecha_vencimiento", vacante.fecha_vencimiento)
+
+    db.session.commit()
+    return jsonify({"message": "Vacante actualizado"}), 200
 
 
 
@@ -185,7 +207,7 @@ def get_perfil_trabajador_by_id(user_id):
 #obtener vacante
 
 @api.route('/vacantes/<int:vacante_id>', methods=['GET'])
-##@jwt_required()
+@jwt_required()
 def get_vacante_by_id(vacante_id):
     vacante = Trabajo.query.get(vacante_id)
 
@@ -218,6 +240,22 @@ def handle_vacantes_empresa(empresa_id):
         return jsonify({"error": str(e)}), 500
 
 
+# ✅ Endpoint : EPostular vacante
+@api.route("/postulacion", methods=['POST'])
+def create_postulacion_user():
+
+    data = request.get_json(silent=True)
+
+    #if db.session.execute(db.select(Postulacion).filter_by(id_trabajador=data["id_trabajador"])).scalar_one_or_none():
+     #   return jsonify({"error": "Usuario ya existe"}), 409
+    postulacion = Postulacion(
+        id_trabajo=data.get("id_trabajo"),
+        id_empresa=data.get("id_empresa"),
+        id_trabajador=data.get("id_trabajador"),
+        )
+    db.session.add(postulacion)
+    db.session.commit()
+    return jsonify({"message": "Usuario Postulado"}), 201
 
 
 

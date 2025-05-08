@@ -17,7 +17,8 @@ export const Vacantes = () => {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes`,{
                 method:'GET',
                 headers:{
-                    "Content-Type":"application/json"
+                    "Content-Type":"application/json",
+                    "Authorization": `Bearer ${sessionStorage.getItem('access_token')}`
                 }
                 });
 
