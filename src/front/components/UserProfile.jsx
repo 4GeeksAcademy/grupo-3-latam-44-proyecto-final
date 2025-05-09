@@ -1,3 +1,4 @@
+import { div } from "framer-motion/client";
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom"
 
@@ -186,12 +187,23 @@ const UserProfile = (id) => {
 
 
   return (
-    <div className="container py-5">
+    <div className="container py-5"> 
       <div className="row justify-content-center">
+
         <div className="col-md-8">
+       
           <div className="card shadow-lg border-0 rounded-4">
+         
             <div className="card-body p-5">
+
+            <div className="text-end mb-3">
+              <Link to="/postulaciones" className="btn btn-success">
+                Mis postulaciones
+              </Link>
+            </div>
+
               <div className="text-center mb-4">
+             
                 <img
                   src="https://picsum.photos/150"
                   alt="avatar"
