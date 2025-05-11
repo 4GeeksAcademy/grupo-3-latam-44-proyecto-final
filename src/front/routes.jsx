@@ -15,6 +15,7 @@ import { ListaDeVacantes } from "./pages/ListaDeVacantes";
 import { EditarVacante } from "./pages/EditarVacante";
 import { VacantePostulados } from "./pages/VacantePostulados";
 import Postulaciones from "./pages/Postulaciones"; // Importa el componente
+import { TrabajadorPostulado } from "./pages/TrabajadorPostulado";
 
 export const AppRouter = () => {
   return (
@@ -33,6 +34,7 @@ export const AppRouter = () => {
           <Route path="/perfil/empresa/:id" element={<PerfilEmpresa />} />
           <Route path="/perfil/empresa/:id/listado-vacantes" element={<ListaDeVacantes />} />
           <Route path="/postulaciones" element={<Postulaciones />} /> {/* Nueva ruta */}
+          <Route path="/perfil/trabajador/:id" element={<TrabajadorPostulado/>} />
         </Route>
 
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />

@@ -27,13 +27,13 @@ def get_postulados_por_vacante(vacante_id):
         current_user_id = get_jwt_identity()
         trabajo = Trabajo.query.get(vacante_id)
 
-        if not trabajo or trabajo.empresa_id != current_user_id:
-            return jsonify({"msg": "No autorizado para ver los postulantes de esta vacante"}), 403
+        #if not trabajo or trabajo.empresa_id != current_user_id:
+         #   return jsonify({"msg": "No autorizado para ver los postulantes de esta vacante"}), 403
 
         postulaciones = Postulacion.query.filter_by(id_trabajo=vacante_id).all()
 
-        if not postulaciones:
-            return jsonify({"msg": "No hay trabajadores postulados a esta vacante"}), 404
+        #if not postulaciones:
+         #   return jsonify({"msg": "No hay trabajadores postulados a esta vacante"}), 404
 
         trabajadores = []
         for post in postulaciones:
@@ -207,7 +207,6 @@ def get_perfil_trabajador_by_id(user_id):
 #obtener vacante
 
 @api.route('/vacantes/<int:vacante_id>', methods=['GET'])
-@jwt_required()
 def get_vacante_by_id(vacante_id):
     vacante = Trabajo.query.get(vacante_id)
 
@@ -291,7 +290,7 @@ def update_empresa_by_id(empresa_id):
 
 
 
-# ✅ Endpoint 3: Publicar nueva vacante (POST)
+# ✅ Endpoint: Publicar nueva vacante
 @api.route('/empresa/<int:empresa_id>/vacantes', methods=['POST'])
 @jwt_required()
 def crear_vacante(empresa_id):
@@ -300,26 +299,39 @@ def crear_vacante(empresa_id):
         return jsonify({"msg": "Empresa no encontrada"}), 404
 
     current_user_id = get_jwt_identity()
-    if empresa.id != empresa_id:
+    if empresa.id != current_user_id:
         return jsonify({"msg": "No autorizado para publicar vacantes"}), 403
 
-    data = request.json
-    nueva = Trabajo(
-        empresa_id=empresa_id,
-        modalidad=data.get("modalidad"),
-        descripcion=data.get("descripcion"),
-        nombre_puesto=data.get("nombre_puesto"),
-        remuneracion=data.get("remuneracion"),
-        condiciones=data.get("condiciones"),
-        responsabilidades=data.get("responsabilidades"),
-        requerimientos=data.get("requerimientos"),
-        fecha_inicio=data.get("fecha_inicio"),
-        fecha_vencimiento=data.get("fecha_vencimiento")
-    )
+    data = request.get_json(silent=True)
+    campos_obligatorios = ['modalidad', 'nombre_puesto', 'descripcion', 'fecha_inicio', 'fecha_vencimiento']
 
-    db.session.add(nueva)
-    db.session.commit()
-    return jsonify({"msg": "Vacante publicada con éxito"}), 201
+    for campo in campos_obligatorios:
+        if not data.get(campo):
+            return jsonify({"msg": f"El campo '{campo}' es obligatorio"}), 400
+
+    try:
+        nueva = Trabajo(
+            empresa_id=empresa_id,
+            modalidad=data.get("modalidad"),
+            descripcion=data.get("descripcion"),
+            nombre_puesto=data.get("nombre_puesto"),
+            remuneracion=data.get("remuneracion"),
+            condiciones=data.get("condiciones"),
+            responsabilidades=data.get("responsabilidades"),
+            requerimientos=data.get("requerimientos"),
+            fecha_inicio=data.get("fecha_inicio"),
+            fecha_vencimiento=data.get("fecha_vencimiento"),
+            activo=True  # Por defecto activa
+        )
+
+        db.session.add(nueva)
+        db.session.commit()
+        return jsonify({"msg": "Vacante publicada con éxito", "vacante_id": nueva.id}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"msg": "Error al crear la vacante", "error": str(e)}), 500
+
 
 
 
