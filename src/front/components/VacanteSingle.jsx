@@ -1,10 +1,17 @@
 import React, {useState, useEffect} from 'react'
-
+import { useNavigate } from "react-router-dom";
 
 export const VacanteSingle = (id) => {
 
+    const  userId  = sessionStorage.getItem('user_id')
+
+    const navigate = useNavigate();
+
+    console.log(id.id)
+
     const [nombrePuesto, setNombrePuesto] = useState()
     const [modalidad, setModalidad] = useState()
+    const [empresaId, setEmpresaId] = useState()
     const [condiciones, setCondiciones] = useState()
     const [remuneracion, setRemuneracion] = useState()
     const [descripcion, setDescripcion] = useState()
@@ -12,12 +19,55 @@ export const VacanteSingle = (id) => {
     const [responsabilidades, setResponsbilidades] = useState()
 
 
-    const handleVacante = async()=>{
+    const handlePostular = async () => {
+        const data = {
+          "id_trabajo": id.id,
+          "id_empresa": empresaId,
+          "id_trabajador": parseInt(userId),
+        };
+          try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/postulacion`, {
+              method: 'POST',
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${sessionStorage.getItem('access_token')}`
+
+              },
+              body: JSON.stringify(data)
+            });
+    
+            const dataa = await response.json()
+            setError(dataa.error)
+    
+            if (!response.ok) {
+              throw new Error("Error login endpoint");
+    
+            }
+    
+        
+    
+          } catch (error) {
+    
+    
+            console.error(error)
+          }
+      }
+
+    const handleExpandVacante = () => {
+        navigate(`/vacante/${id.id}`);
+      };
+
+    const handleFavorites = () => {
+        
+    };
+
+    const handleVacante = async(id)=>{
         try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${id.id}`,{
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${id}`,{
                 method:'GET',
                 headers:{
-                    "Content-Type":"application/json"
+                    "Content-Type":"application/json",
+                    "Authorization": `Bearer ${sessionStorage.getItem('access_token')}`
                 }
                 });
 
@@ -29,6 +79,7 @@ export const VacanteSingle = (id) => {
             setRequerimientos(data.requerimientos)
             setResponsbilidades(data.responsabilidades)
             setRemuneracion(data.remuneracion)
+            setEmpresaId(data.empresa_id)
             
             console.log(infoVacante)
 
@@ -38,8 +89,8 @@ export const VacanteSingle = (id) => {
     }
 
     useEffect(() => {
-        handleVacante()
-        }, [])
+        handleVacante(id.id)
+        }, [id.id])
 
 
     return (
@@ -50,8 +101,8 @@ export const VacanteSingle = (id) => {
                     <h6>Company Name</h6>
                 </div>
                 <div>
+                    <button type="button" onClick={handleExpandVacante} className="btn"><i className="fa-solid fa-expand"></i></button>
                     <button type="button" className="btn"><i className="fa-regular fa-star" /></button>
-                    <button type="button" className="btn"><i className="fa-solid fa-x" /></button>
                 </div>
             </div>
             <div className='d-flex justify-content-between mb-3'>
@@ -60,7 +111,7 @@ export const VacanteSingle = (id) => {
                     <p>{modalidad}</p>
                 </div>
                 <div>
-                    <button type="button" className="btn btn-outline-success">Postularme</button>
+                    <button type="button" onClick={handlePostular} className="btn btn-outline-success">Postularme</button>
                 </div>
             </div>
             <div>

@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 
 
 export const ListaDeVacantes = () => {
+
+  const empresaId = sessionStorage.getItem('user_id')
   const [vacantes, setVacantes] = useState([]);
   const [vacanteSeleccionada, setVacanteSeleccionada] = useState(null);
   const [conteoPostulados, setConteoPostulados] = useState({}); // 🟡 Nuevo estado
@@ -11,7 +13,7 @@ export const ListaDeVacantes = () => {
   // ✅ Obtener listado de vacantes y contar postulados
   const getVacantes = async () => {
     try {
-      const res = await fetch("${import.meta.env.VITE_BACKEND_URL}/api/vacantes");
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/empresa/${empresaId}`);
       const data = await res.json();
       setVacantes(data);
 
@@ -25,7 +27,13 @@ export const ListaDeVacantes = () => {
   // ✅ Obtener número de postulados por vacante
   const getPostuladosCount = async (vacanteId) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${vacanteId}/postulados`);
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${vacanteId}/postulados`,{
+        method:'GET',
+        headers:{
+            "Content-Type":"application/json",
+            "Authorization": `Bearer ${sessionStorage.getItem('access_token')}`
+        }
+        });
       const data = await res.json();
       setConteoPostulados(prev => ({
         ...prev,
@@ -70,9 +78,17 @@ export const ListaDeVacantes = () => {
                 >
                   🔍 Ver Detalles
                 </Link>
+                <Link
+                  to={`/vacante/editar/${v.id}`}
+                  className={`btn btn-success`}
+                >
+                  Editar Vacante
+                </Link>
+                <Link to={`/vacante/${v.id}/postulados`}>
                 <span className="badge bg-secondary">
                   {conteoPostulados[v.id] ?? "…"} postulados
                 </span>
+                </Link>
               </div>
             </div>
           ))}

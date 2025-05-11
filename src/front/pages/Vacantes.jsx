@@ -1,134 +1,70 @@
-
-// src/front/pages/Vacantes.jsx
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavbarHome } from "../components/NavbarHome";
+import { Vacantecard } from "../components/Vacantecard";
+import { VacanteSingle } from "../components/VacanteSingle";
 
 export const Vacantes = () => {
-  const navigate = useNavigate();
 
-  // Vacantes de ejemplo
-  const vacantes = [
-    { id: 1, titulo: "Desarrollador Frontend", ciudad: "CDMX", modalidad: "Remoto" },
-    { id: 2, titulo: "Diseñador UX/UI", ciudad: "Monterrey", modalidad: "Presencial" },
-    { id: 3, titulo: "Analista de Datos", ciudad: "Guadalajara", modalidad: "Híbrido" },
-    { id: 4, titulo: "Administrador de Redes", ciudad: "Cancún", modalidad: "Remoto" },
-    { id: 5, titulo: "Gerente de Marketing", ciudad: "Querétaro", modalidad: "Presencial" },
-    { id: 6, titulo: "Programador Backend", ciudad: "Tijuana", modalidad: "Remoto" },
-    { id: 7, titulo: "Asistente Administrativo", ciudad: "Puebla", modalidad: "Presencial" },
-    { id: 8, titulo: "Soporte Técnico", ciudad: "Toluca", modalidad: "Remoto" },
-    { id: 9, titulo: "Ingeniero QA", ciudad: "Mérida", modalidad: "Híbrido" },
-    { id: 10, titulo: "Community Manager", ciudad: "CDMX", modalidad: "Remoto" },
-    { id: 11, titulo: "Consultor SAP", ciudad: "Guadalajara", modalidad: "Presencial" },
-    { id: 12, titulo: "Arquitecto de Software", ciudad: "Monterrey", modalidad: "Remoto" }
-  ];
+    const [listadoVacantes, setListadoVacantes] = useState([]);
+     const [seleccion, setSeleccion] = useState("")
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const vacantesPorPagina = 6;
-  const indexUltimaVacante = currentPage * vacantesPorPagina;
-  const indexPrimeraVacante = indexUltimaVacante - vacantesPorPagina;
-  const vacantesActuales = vacantes.slice(indexPrimeraVacante, indexUltimaVacante);
-  const totalPaginas = Math.ceil(vacantes.length / vacantesPorPagina);
+    
+    const handleSeleccion = (id) => {
+        setSeleccion(id)
+    }
+    const handleListadoVacantes = async()=>{
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes`,{
+                method:'GET',
+                headers:{
+                    "Content-Type":"application/json",
+                    "Authorization": `Bearer ${sessionStorage.getItem('access_token')}`
+                }
+                });
 
-  const [mostrarModal, setMostrarModal] = useState(false);
+            const data = await response.json()
+            const listado = []
+            data.forEach(element => {
+                
+                listado.push(element.id)
+                
+            });
+            setListadoVacantes(listado)
+            
+            
 
-  const handleAnterior = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
+        }catch (error) {
+            console.log(error)
+        }
+    }
 
-  const handleSiguiente = () => {
-    if (currentPage < totalPaginas) setCurrentPage(currentPage + 1);
-  };
+     useEffect(() => {
+        handleListadoVacantes()
+                }, [])
 
-  const handleVerDetalles = () => {
-    setMostrarModal(true);
-  };
 
-  const handleCerrarModal = () => {
-    setMostrarModal(false);
-  };
-
-  const handleRegistro = () => {
-    navigate("/registrarme");
-  };
-
-  return (
-    <>
-      <div className="container mt-5">
-        <h2 className="text-center mb-4">Vacantes Disponibles</h2>
-
-        <div className="row">
-          {vacantesActuales.map((vacante) => (
-            <div className="col-md-4 mb-4" key={vacante.id}>
-              <div className="card h-100 shadow">
-                <div className="card-body d-flex flex-column">
-                  <h5 className="card-title">{vacante.titulo}</h5>
-                  <p className="card-text">
-                    <strong>Ciudad:</strong> {vacante.ciudad}<br />
-                    <strong>Modalidad:</strong> {vacante.modalidad}
-                  </p>
-                  <button
-                    className="btn btn-outline-primary mt-auto"
-                    onClick={handleVerDetalles}
-                  >
-                    Ver Detalles
-                  </button>
+    return (
+        
+            <div className="row mt-5">
+                <div className="col-3">
+                    <nav id="navbar-example3" className="h-100 flex-column align-items-stretch pe-4 border-end">
+                        <nav className="nav nav-pills flex-column">
+                        { listadoVacantes.map((x) => (
+                            <span >
+                            <Vacantecard id={x} handleSeleccion={handleSeleccion}/>
+                            </span>
+                        ))
+                        }
+                        </nav>
+                    </nav>
                 </div>
-              </div>
+                <div className="col-8">
+                    <div data-bs-spy="scroll" data-bs-target="#navbar-example3" data-bs-smooth-scroll="true" className="scrollspy-example-2" tabindex="0">
+                        <div id="item-1">
+                            <VacanteSingle id={seleccion}/>
+                        </div>
+                    </div>
+                </div>
             </div>
-          ))}
-        </div>
-
-        {/* Paginación */}
-        <div className="d-flex justify-content-center mt-4">
-          <button
-            className="btn btn-outline-secondary mx-2"
-            onClick={handleAnterior}
-            disabled={currentPage === 1}
-          >
-            Anterior
-          </button>
-          <span className="align-self-center">
-            Página {currentPage} de {totalPaginas}
-          </span>
-          <button
-            className="btn btn-outline-secondary mx-2"
-            onClick={handleSiguiente}
-            disabled={currentPage === totalPaginas}
-          >
-            Siguiente
-          </button>
-        </div>
-
-        {/* Modal de Registro */}
-        {mostrarModal && (
-          <div
-            className="modal fade show d-block"
-            tabIndex="-1"
-            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-            onClick={handleCerrarModal}
-          >
-            <div className="modal-dialog modal-dialog-centered" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">¡Descubre más oportunidades! 🚀</h5>
-                  <button type="button" className="btn-close" onClick={handleCerrarModal}></button>
-                </div>
-                <div className="modal-body">
-                  <p>¿Te gustaría descubrir más sobre esta oportunidad?</p>
-                  <p>Regístrate gratis y desbloquea el catálogo completo de vacantes.</p>
-                </div>
-                <div className="modal-footer">
-                  <button className="btn btn-primary" onClick={handleRegistro}>
-                    Registrarme Ahora
-                  </button>
-                  <button className="btn btn-secondary" onClick={handleCerrarModal}>
-                    Cerrar
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </>
-  )}
+    );
+};

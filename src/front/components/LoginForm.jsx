@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom";
 import md5 from 'md5';
-//import  NavbarLogin  from "../components/NavbarLogin";
+
 
 const LoginFormUser = () => {
 
@@ -53,9 +53,10 @@ const LoginFormUser = () => {
         const response_data = await response.json();
   
         sessionStorage.setItem("access_token", response_data.access_token)
+        sessionStorage.setItem("user_id", response_data.user_id)
         setInfoData(response_data)
   
-        navigate("/perfil")
+        navigate(`/perfil/user/${response_data.user_id}`)
   
       } catch (error) {
         console.error(error)
@@ -85,9 +86,10 @@ const LoginFormUser = () => {
         const response_data = await response.json();
   
         sessionStorage.setItem("access_token", response_data.access_token)
+        sessionStorage.setItem("user_id", response_data.user_id)
         setInfoData(response_data)
   
-        navigate("/")
+        navigate(`/perfil/empresa/${response_data.user_id}`)
   
       } catch (error) {
         console.error(error)
