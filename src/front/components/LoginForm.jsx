@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom";
 import md5 from 'md5';
 
-
 const LoginFormUser = () => {
 
   const navigate = useNavigate()
@@ -138,13 +137,6 @@ const LoginFormUser = () => {
           <input className="form-check-input" type="checkbox" role="switch" id="switchCheckChecked" onClick={toggleEmpresa} />
           <label className="form-check-label" for="switchCheckChecked">Soy Empresa</label>
         </div>
-        <p className="text-end mt-5"> 
-  <Link to="/forgot-password" className="text-decoration-none text-primary">
-    ¿Olvidaste tu contraseña?
-  </Link>
-</p>
-
-      
       </div>
 
       {/* Animaciones CSS */}
