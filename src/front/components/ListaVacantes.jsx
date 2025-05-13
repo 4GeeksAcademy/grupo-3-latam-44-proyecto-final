@@ -70,7 +70,7 @@ export const ListaVacantes = () => {
         <h2 className="text-center mb-4">Vacantes Disponibles</h2>
 
         <div className="row">
-          {listadoVacantes.map((vacante) => (
+          {vacantesActuales.map((vacante) => (
             <CardVacanteHome id={vacante} key={vacante.id}/>
           ))}
         </div>
