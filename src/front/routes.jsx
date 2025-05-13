@@ -34,7 +34,7 @@ export const AppRouter = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/registrarme" element={<Registrarme />} />
           <Route path="/vacante/:id" element={<Vacante />} />
-          <Route path="/vacante/postulados" element={<VacantePostulados />} />
+          <Route path="/vacante/:id/postulados" element={<VacantePostulados />} />
           <Route path="/vacante/editar/:id" element={<EditarVacante />} />
           <Route path="/perfil/user/:id" element={<PerfilUser />} />
           <Route path="/perfil/empresa/:id" element={<PerfilEmpresa />} />
