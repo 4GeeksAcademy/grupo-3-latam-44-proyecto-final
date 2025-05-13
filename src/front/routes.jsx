@@ -1,30 +1,50 @@
-// Import necessary components and functions from react-router-dom.
+// src/front/routes.jsx
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Layout } from "./components/Layout";
+import { LandingPage } from "./pages/LandingPage";
+import { Vacantes } from "./pages/Vacantes"; // 👈 Agregamos estas rutas
+import { Login } from "./pages/Login";
+import { Registrarme } from "./pages/Registrarme";
+import {Vacante} from "./pages/Vacante"
+import { PerfilTrabajador } from "./pages/PerfilTrabajador";
+import PerfilUser from "./pages/PerfilUser";
+import { PerfilEmpresa } from "./pages/PerfilEmpresa";
+import { CrearVacante } from "./pages/CrearVacante";
+import { ListaDeVacantes } from "./pages/ListaDeVacantes";
+import { EditarVacante } from "./pages/EditarVacante";
+import { VacantePostulados } from "./pages/VacantePostulados";
+import {Postulaciones} from "./pages/Postulaciones"; // Importa el componente
+import { TrabajadorPostulado } from "./pages/TrabajadorPostulado";
+import useGlobalReducer from "./hooks/useGlobalReducer";
+import { NavbarLogin } from "./components/NavbarLogin";
+import { NavbarHome } from "./components/NavbarHome";
 
-import {
-    createBrowserRouter,
-    createRoutesFromElements,
-    Route,
-} from "react-router-dom";
-import { Layout } from "./pages/Layout";
-import { Home } from "./pages/Home";
-import { Single } from "./pages/Single";
-import { Demo } from "./pages/Demo";
 
-export const router = createBrowserRouter(
-    createRoutesFromElements(
-    // CreateRoutesFromElements function allows you to build route elements declaratively.
-    // Create your routes here, if you want to keep the Navbar and Footer in all views, add your new routes inside the containing Route.
-    // Root, on the contrary, create a sister Route, if you have doubts, try it!
-    // Note: keep in mind that errorElement will be the default page when you don't get a route, customize that page to make your project more attractive.
-    // Note: The child paths of the Layout element replace the Outlet component with the elements contained in the "element" attribute of these child paths.
+export const AppRouter = () => {
+  const { store } = useGlobalReducer()
+  return (
+    <BrowserRouter>
+    {store.token ? <NavbarLogin /> : <NavbarHome />}
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<LandingPage />} />
+          <Route path="/vacantes" element={<Vacantes />} />
+          <Route path="/nueva-vacante" element={<CrearVacante />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/registrarme" element={<Registrarme />} />
+          <Route path="/vacante/:id" element={<Vacante />} />
+          <Route path="/vacante/postulados" element={<VacantePostulados />} />
+          <Route path="/vacante/editar/:id" element={<EditarVacante />} />
+          <Route path="/perfil/user/:id" element={<PerfilUser />} />
+          <Route path="/perfil/empresa/:id" element={<PerfilEmpresa />} />
+          <Route path="/perfil/empresa/:id/listado-vacantes" element={<ListaDeVacantes />} />
+          <Route path="/postulaciones" element={<Postulaciones />} /> {/* Nueva ruta */}
+          <Route path="/perfil/trabajador/:id" element={<TrabajadorPostulado/>} />
+        </Route>
 
-      // Root Route: All navigation will start from here.
-      <Route path="/" element={<Layout />} errorElement={<h1>Not found!</h1>} >
-
-        {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
-        <Route path= "/" element={<Home />} />
-        <Route path="/single/:theId" element={ <Single />} />  {/* Dynamic route for single items */}
-        <Route path="/demo" element={<Demo />} />
-      </Route>
-    )
-);
+        <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
+      </Routes>
+    </BrowserRouter>
+  );
+};

@@ -12,7 +12,8 @@ export const initialStore=()=>{
         title: "Do my homework",
         background: null,
       }
-    ]
+    ],
+    token:sessionStorage.getItem("access_token")
   }
 }
 
@@ -32,6 +33,19 @@ export default function storeReducer(store, action = {}) {
         ...store,
         todos: store.todos.map((todo) => (todo.id === id ? { ...todo, background: color } : todo))
       };
+    case 'set_token':
+      const token = action.payload
+      return {
+        ...store,
+        token: token
+      }
+      case 'log_out':
+        sessionStorage.removeItem('access_token')
+        sessionStorage.removeItem('user_id')
+      return {
+        ...store,
+        token: null
+      }
     default:
       throw Error('Unknown action.');
   }    
