@@ -12,7 +12,7 @@ export const Vacantecard = ({id, handleSeleccion}) => {
     
         const handleVacante = async()=>{
             try {
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${id}`,{
+                const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/vacantes/${id}`,{
                     method:'GET',
                     headers:{
                         "Content-Type":"application/json",
@@ -33,7 +33,7 @@ export const Vacantecard = ({id, handleSeleccion}) => {
 
         const handleEmpresa = async(empresaId)=>{
             try {
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/empresa/${empresaId}`,{
+                const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/empresa/${empresaId}`,{
                     method:'GET',
                     headers:{
                         "Content-Type":"application/json",

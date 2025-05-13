@@ -31,7 +31,7 @@ export const CrearVacante = () => {
       "fecha_vencimiento": fechaVencimiento
     };
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/empresa/${empresaId}/vacantes`, {
+      const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/empresa/${empresaId}/vacantes`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",

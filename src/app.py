@@ -26,10 +26,7 @@ app = Flask(__name__)
 app.config["JWT_ACCES_TOKEN_EXPIRES"] = timedelta(hours=1)  # expiracion global
 
 # ✅ CORS solo para orígenes permitidos
-CORS(app, origins=[
-    "http://localhost:3000",
-    "https://ideal-cod-v7zppv66zpxhpwv-3000.app.github.dev"
-])
+CORS(app)
 
 # ✅ Seguridad y utilidades
 bcrypt = Bcrypt(app)

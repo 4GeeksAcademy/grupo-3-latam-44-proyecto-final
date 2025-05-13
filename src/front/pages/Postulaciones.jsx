@@ -6,7 +6,7 @@ const Postulaciones = () => {
 
   useEffect(() => {
     // Realiza una solicitud al backend para obtener las postulaciones
-    fetch('/api/postulaciones', {
+    fetch('https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/postulaciones', {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`, // Asegúrate de enviar el token JWT
       },

@@ -10,7 +10,7 @@ export const VacanteDetail = () => {
   useEffect(() => {
     const getPostulados = async () => {
       try {
-        const resp = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${id}/postulados`);
+        const resp = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/vacantes/${id}/postulados`);
         if (!resp.ok) throw new Error("No se pudo obtener la lista de postulantes");
         const data = await resp.json();
         setPostulados(data);

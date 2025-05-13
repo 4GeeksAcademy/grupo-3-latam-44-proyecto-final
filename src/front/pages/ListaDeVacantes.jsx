@@ -13,7 +13,7 @@ export const ListaDeVacantes = () => {
   // ✅ Obtener listado de vacantes y contar postulados
   const getVacantes = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/empresa/${empresaId}`);
+      const res = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/vacantes/empresa/${empresaId}`);
       const data = await res.json();
       setVacantes(data);
 
@@ -27,7 +27,7 @@ export const ListaDeVacantes = () => {
   // ✅ Obtener número de postulados por vacante
   const getPostuladosCount = async (vacanteId) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${vacanteId}/postulados`,{
+      const res = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/vacantes/${vacanteId}/postulados`,{
         method:'GET',
         headers:{
             "Content-Type":"application/json",

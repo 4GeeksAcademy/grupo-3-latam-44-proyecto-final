@@ -9,7 +9,7 @@ const ListaDeTrabajos = () => {
   const getTrabajos = async () => {
     try {
 
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajos`);
+      const res = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/trabajos`);
 
       const data = await res.json();
       setTrabajos(data);

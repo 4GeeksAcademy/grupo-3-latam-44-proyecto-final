@@ -24,7 +24,7 @@ const TrabajoForm = ({ trabajo, onUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const resp = await fetch(`http://localhost:3001/api/trabajos/${trabajo.id}`, {
+      const resp = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/trabajos/${trabajo.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"

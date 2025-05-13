@@ -303,9 +303,7 @@ def crear_vacante(empresa_id):
     if not empresa:
         return jsonify({"msg": "Empresa no encontrada"}), 404
 
-    current_user_id = get_jwt_identity()
-    if empresa.id != current_user_id:
-        return jsonify({"msg": "No autorizado para publicar vacantes"}), 403
+    
 
     data = request.get_json(silent=True)
     campos_obligatorios = ['modalidad', 'nombre_puesto', 'descripcion', 'fecha_inicio', 'fecha_vencimiento']
@@ -380,7 +378,7 @@ def cambiar_estado_vacante(empresa_id, vacante_id):
     return jsonify({"msg": "Estado de vacante actualizado"}), 200
 
 @api.route("/api/forgot-password", methods=["POST"])
-def forgot_password():
+def forgot_pass():
     body = request.get_json()
     email = body.get("email")
 
@@ -397,7 +395,7 @@ def forgot_password():
 
     return jsonify({"message": "Correo enviado con el enlace de recuperación."}), 200
 
-@app.route('/api/forgot-password', methods=['POST'])
+@api.route('/api/forgot-password', methods=['POST'])
 def forgot_password():
     data = request.get_json()
     email = data.get('email')
@@ -414,7 +412,7 @@ def forgot_password():
     send_reset_email(email, token)
     return jsonify({"message": "Correo de recuperación enviado"})
 
-@app.route('/api/reset-password/<token>', methods=['POST'])
+@api.route('/api/reset-password/<token>', methods=['POST'])
 def reset_password(token):
     data = request.get_json()
     new_password = data.get('password')
@@ -431,8 +429,8 @@ def reset_password(token):
     return jsonify({"message": "Contraseña actualizada correctamente"})
 
 
-@app.route('/api/forgot-password', methods=['POST'])
-def forgot_password():
+@api.route('/api/forgot-password', methods=['POST'])
+def forgot_pas():
     data = request.get_json()
     email = data.get('email')
 

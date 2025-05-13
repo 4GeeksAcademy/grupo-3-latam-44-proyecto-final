@@ -26,7 +26,7 @@ export const NavbarHome = () => {
   const handleLogout = async () => {
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/logout`, {
+      const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/logout`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",

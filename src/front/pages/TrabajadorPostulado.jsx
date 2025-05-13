@@ -31,7 +31,7 @@ export const TrabajadorPostulado = () => {
 
   const handleUserInfo = async(id)=>{
     try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajador/${id}`,{
+        const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/trabajador/${id}`,{
             method:'GET',
             headers:{
                 "Content-Type":"application/json",
@@ -56,7 +56,7 @@ export const TrabajadorPostulado = () => {
 
 const handlePerfilInfo = async(id)=>{
   try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajador-perfil/${id}`,{
+      const response = await fetch(`$https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/trabajador-perfil/${id}`,{
           method:'GET',
           headers:{
               "Content-Type":"application/json",
@@ -78,7 +78,7 @@ const handlePerfilInfo = async(id)=>{
 
 const handleCVInfo = async(id)=>{
 try {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajador-cv/${id}`,{
+    const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/trabajador-cv/${id}`,{
         method:'GET',
         headers:{
             "Content-Type":"application/json",

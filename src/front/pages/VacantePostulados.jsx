@@ -12,7 +12,7 @@ export const VacantePostulados = () => {
     const getPostulantes = async () => {
         try {
 
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${id}/postulados`, {
+            const res = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/vacantes/${id}/postulados`, {
                     method: 'GET',
                     headers: {
                         "Content-Type": "application/json",
@@ -30,7 +30,7 @@ export const VacantePostulados = () => {
     const getNombrePostulacion = async () => {
         try {
 
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${id}`, {
+            const res = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/vacantes/${id}`, {
                     method: 'GET',
                     headers: {
                         "Content-Type": "application/json",

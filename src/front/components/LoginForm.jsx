@@ -37,7 +37,7 @@ const LoginFormUser = () => {
         "password": password
       };
       try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/login/user`, {
+        const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/login/user`, {
           method: 'POST',
           headers: {
             "Content-Type": "application/json"
@@ -70,7 +70,7 @@ const LoginFormUser = () => {
         "password": password
       };
       try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/login/empresa`, {
+        const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/login/empresa`, {
           method: 'POST',
           headers: {
             "Content-Type": "application/json"

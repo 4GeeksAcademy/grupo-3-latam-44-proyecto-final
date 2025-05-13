@@ -26,7 +26,7 @@ export const VacanteSingle = (id) => {
           "id_trabajador": parseInt(userId),
         };
           try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/postulacion`, {
+            const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/postulacion`, {
               method: 'POST',
               headers: {
                 "Content-Type": "application/json",
@@ -63,7 +63,7 @@ export const VacanteSingle = (id) => {
 
     const handleVacante = async(id)=>{
         try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${id}`,{
+            const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/vacantes/${id}`,{
                 method:'GET',
                 headers:{
                     "Content-Type":"application/json",

@@ -48,7 +48,7 @@ const RegisterFormUser = () => {
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users`, {
+      const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -83,7 +83,7 @@ const RegisterFormUser = () => {
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/empresa`, {
+      const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/empresa`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

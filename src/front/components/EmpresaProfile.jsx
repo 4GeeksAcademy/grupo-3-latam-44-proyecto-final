@@ -24,7 +24,7 @@ export const EmpresaProfile = (id) => {
 
     const handleEmpresaInfo = async (userId) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/empresa/${userId}`, {
+            const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/empresa/${userId}`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export const EmpresaProfile = (id) => {
 
         };
         try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/empresa/${userId}`, {
+            const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/empresa/${userId}`, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",

@@ -34,7 +34,7 @@ const UserProfile = (id) => {
       
           const handleUserInfo = async(userId)=>{
               try {
-                  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajador/${userId}`,{
+                  const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/trabajador/${userId}`,{
                       method:'GET',
                       headers:{
                           "Content-Type":"application/json",
@@ -59,7 +59,7 @@ const UserProfile = (id) => {
 
           const handlePerfilInfo = async(userId)=>{
             try {
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajador-perfil/${userId}`,{
+                const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/trabajador-perfil/${userId}`,{
                     method:'GET',
                     headers:{
                         "Content-Type":"application/json",
@@ -81,7 +81,7 @@ const UserProfile = (id) => {
 
         const handleCVInfo = async(userId)=>{
           try {
-              const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajador-cv/${userId}`,{
+              const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/trabajador-cv/${userId}`,{
                   method:'GET',
                   headers:{
                       "Content-Type":"application/json",
@@ -115,7 +115,7 @@ const UserProfile = (id) => {
           "userId":sessionStorage.getItem('user_id')
         };
           try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajador/perfil`, {
+            const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/trabajador/perfil`, {
               method: 'POST',
               headers: {
                 "Content-Type": "application/json",
@@ -152,7 +152,7 @@ const UserProfile = (id) => {
           "userId":sessionStorage.getItem('user_id')
         };
           try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trabajador/cv`, {
+            const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/trabajador/cv`, {
               method: 'POST',
               headers: {
                 "Content-Type": "application/json",

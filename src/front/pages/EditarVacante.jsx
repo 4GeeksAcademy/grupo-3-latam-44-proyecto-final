@@ -21,7 +21,7 @@ export const EditarVacante = () => {
 
     const handleVacante = async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacantes/${id}`, {
+            const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/vacantes/${id}`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
@@ -67,7 +67,7 @@ export const EditarVacante = () => {
             "fecha_vencimiento": fechaVencimiento
         };
         try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vacante/${id}`, {
+            const response = await fetch(`https://scaling-disco-q7qvv4w7rgv4cvw5-3001.app.github.dev/api/vacante/${id}`, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
