@@ -1,10 +1,14 @@
 import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom";
 import md5 from 'md5';
+import useGlobalReducer from "../hooks/useGlobalReducer";
 
 
 const LoginFormUser = () => {
 
+  
+
+  const { store, dispatch } = useGlobalReducer()
   const navigate = useNavigate()
 
    const [email, setEmail] = useState("")
@@ -55,8 +59,11 @@ const LoginFormUser = () => {
         sessionStorage.setItem("access_token", response_data.access_token)
         sessionStorage.setItem("user_id", response_data.user_id)
         setInfoData(response_data)
+
+        
   
         navigate(`/perfil/user/${response_data.user_id}`)
+        dispatch({type:"set_token",payload:sessionStorage.getItem("access_token")})
   
       } catch (error) {
         console.error(error)
@@ -88,6 +95,7 @@ const LoginFormUser = () => {
         sessionStorage.setItem("access_token", response_data.access_token)
         sessionStorage.setItem("user_id", response_data.user_id)
         setInfoData(response_data)
+        dispatch({type:"set_token",payload:response_data.access_token})
   
         navigate(`/perfil/empresa/${response_data.user_id}`)
   

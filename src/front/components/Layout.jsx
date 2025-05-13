@@ -1,16 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom"; // ✅ ¡IMPORTANTE!
 import { ToastContainer } from "react-toastify";
 import { NavbarHome } from "./NavbarHome";
 import { Footer } from "./Footer";
 import "react-toastify/dist/ReactToastify.css";
+import { NavbarLogin } from "./NavbarLogin";
+
 
 
 
 export const Layout = () => {
+  
+
   return (
     <>
-      <NavbarHome />
+      
       <main style={{ minHeight: "calc(100vh - 120px)" }}>
         <Outlet />
       </main>

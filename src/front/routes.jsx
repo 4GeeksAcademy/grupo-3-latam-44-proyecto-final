@@ -14,12 +14,18 @@ import { CrearVacante } from "./pages/CrearVacante";
 import { ListaDeVacantes } from "./pages/ListaDeVacantes";
 import { EditarVacante } from "./pages/EditarVacante";
 import { VacantePostulados } from "./pages/VacantePostulados";
-import Postulaciones from "./pages/Postulaciones"; // Importa el componente
+import {Postulaciones} from "./pages/Postulaciones"; // Importa el componente
 import { TrabajadorPostulado } from "./pages/TrabajadorPostulado";
+import useGlobalReducer from "./hooks/useGlobalReducer";
+import { NavbarLogin } from "./components/NavbarLogin";
+import { NavbarHome } from "./components/NavbarHome";
+
 
 export const AppRouter = () => {
+  const { store } = useGlobalReducer()
   return (
     <BrowserRouter>
+    {store.token ? <NavbarLogin /> : <NavbarHome />}
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<LandingPage />} />

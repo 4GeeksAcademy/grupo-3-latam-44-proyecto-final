@@ -1,13 +1,16 @@
-// src/front/pages/NavbarHome.jsx
+
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/img/logo.png"; // ✅ Importamos el logo
+import useGlobalReducer from "../hooks/useGlobalReducer";
 
-export const NavbarHome = (toggle) => {
-  console.log(toggle.toggle)
+export const NavbarLogin = (toggle) => {
+
+  const userId = sessionStorage.getItem('user_id')
+  const { store, dispatch } = useGlobalReducer()
   const navigate = useNavigate()
- 
- 
+
+
   const handleLogout = async () => {
 
     try {
@@ -27,8 +30,9 @@ export const NavbarHome = (toggle) => {
 
       console.log(responseData)
 
-      sessionStorage.removeItem('access_token')
-      sessionStorage.removeItem('user_id')
+
+
+      dispatch({ type: "log_out" })
 
 
       navigate("/")
@@ -70,12 +74,12 @@ export const NavbarHome = (toggle) => {
         <Link to="/vacantes" className="btn btn-primary">
           Vacantes
         </Link>
-        <Link to="/login" className="btn btn-primary">
-          Login
+        <Link to={`/perfil/user/${userId}`} className="btn btn-success">
+          Mi Perfil
         </Link>
-        <Link to="/registrarme" className="btn btn-success">
-          Registrarme
-        </Link>
+        <button onClick={handleLogout} className="btn btn-danger">
+          Logout
+        </button>
       </div>
     </nav>
   );

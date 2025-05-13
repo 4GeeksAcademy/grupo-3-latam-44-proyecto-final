@@ -43,20 +43,7 @@ export const ListaVacantes = () => {
                   }, [])
 
   // Vacantes de ejemplo
-  const vacantes = [
-    { id: 1, titulo: "Desarrollador Frontend", ciudad: "CDMX", modalidad: "Remoto" },
-    { id: 2, titulo: "Diseñador UX/UI", ciudad: "Monterrey", modalidad: "Presencial" },
-    { id: 3, titulo: "Analista de Datos", ciudad: "Guadalajara", modalidad: "Híbrido" },
-    { id: 4, titulo: "Administrador de Redes", ciudad: "Cancún", modalidad: "Remoto" },
-    { id: 5, titulo: "Gerente de Marketing", ciudad: "Querétaro", modalidad: "Presencial" },
-    { id: 6, titulo: "Programador Backend", ciudad: "Tijuana", modalidad: "Remoto" },
-    { id: 7, titulo: "Asistente Administrativo", ciudad: "Puebla", modalidad: "Presencial" },
-    { id: 8, titulo: "Soporte Técnico", ciudad: "Toluca", modalidad: "Remoto" },
-    { id: 9, titulo: "Ingeniero QA", ciudad: "Mérida", modalidad: "Híbrido" },
-    { id: 10, titulo: "Community Manager", ciudad: "CDMX", modalidad: "Remoto" },
-    { id: 11, titulo: "Consultor SAP", ciudad: "Guadalajara", modalidad: "Presencial" },
-    { id: 12, titulo: "Arquitecto de Software", ciudad: "Monterrey", modalidad: "Remoto" }
-  ];
+
 
   const [currentPage, setCurrentPage] = useState(1);
   const vacantesPorPagina = 6;

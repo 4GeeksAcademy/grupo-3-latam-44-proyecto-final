@@ -230,8 +230,32 @@ def handle_vacantes():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+        
+# mostrar Listado vacante por trabajador
+@api.route('/postulaciones/<int:trabajador_id>', methods=['GET'])
 
-# mostrar listado de vacantes por
+def listar_postulanciones(trabajador_id):
+   
+
+    postulaciones = Postulacion.query.filter_by(id_trabajador=trabajador_id).all()
+    print(postulaciones)
+    resultado = []
+    for p in postulaciones:
+        trabajo = Trabajo.query.get(p.id_trabajo)
+        empresa = Empresa.query.get(p.id_empresa)
+        if trabajo:
+            resultado.append({
+                "nombre": trabajo.nombre_puesto,
+                "modalidad": trabajo.modalidad,
+                "empresa":empresa.nombre,
+                "id": trabajo.id,
+
+            })
+
+    return jsonify(resultado), 200
+
+
+# mostrar listado de vacantes por empresa
 @api.route('/vacantes/empresa/<int:empresa_id>', methods=['GET'])
 def handle_vacantes_empresa(empresa_id):
     try:
@@ -376,6 +400,9 @@ def cambiar_estado_vacante(empresa_id, vacante_id):
     trabajo.activo = data.get("activo", trabajo.activo)
     db.session.commit()
     return jsonify({"msg": "Estado de vacante actualizado"}), 200
+
+
+#olvide contrasena
 
 @api.route("/api/forgot-password", methods=["POST"])
 def forgot_pass():
